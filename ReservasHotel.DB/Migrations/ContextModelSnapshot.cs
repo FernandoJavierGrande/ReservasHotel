@@ -24,25 +24,32 @@ namespace ReservasHotel.DB.Migrations
 
             modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Afiliado", b =>
                 {
-                    b.Property<int>("Cuil")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Cuil"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Apellido")
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
+                    b.Property<int>("Cuil")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("FechaCreacion")
+                        .IsRequired()
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
-                    b.HasKey("Cuil");
+                    b.HasKey("Id");
 
-                    b.ToTable("Afiliados", (string)null);
+                    b.ToTable("Afiliados");
                 });
 
             modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Dia", b =>
@@ -75,7 +82,7 @@ namespace ReservasHotel.DB.Migrations
                     b.HasIndex(new[] { "HabitacionId", "Fecha" }, "diaIdHab_Uq")
                         .IsUnique();
 
-                    b.ToTable("DiasReservas", (string)null);
+                    b.ToTable("DiasReservas");
                 });
 
             modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.EstadoPago", b =>
@@ -96,7 +103,7 @@ namespace ReservasHotel.DB.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EstadosDePago", (string)null);
+                    b.ToTable("EstadosDePago");
                 });
 
             modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Habitacion", b =>
@@ -123,7 +130,7 @@ namespace ReservasHotel.DB.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Habitaciones", (string)null);
+                    b.ToTable("Habitaciones");
                 });
 
             modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Privilegio", b =>
@@ -137,7 +144,7 @@ namespace ReservasHotel.DB.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Privilegios", (string)null);
+                    b.ToTable("Privilegios");
                 });
 
             modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Reserva", b =>
@@ -181,7 +188,7 @@ namespace ReservasHotel.DB.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("Reservas", (string)null);
+                    b.ToTable("Reservas");
                 });
 
             modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Usuario", b =>
@@ -219,7 +226,7 @@ namespace ReservasHotel.DB.Migrations
                     b.HasIndex(new[] { "NombreUsuario" }, "NUsuario_Uq")
                         .IsUnique();
 
-                    b.ToTable("Usuarios", (string)null);
+                    b.ToTable("Usuarios");
                 });
 
             modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Dia", b =>

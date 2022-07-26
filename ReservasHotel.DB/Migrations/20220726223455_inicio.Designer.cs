@@ -12,8 +12,8 @@ using ReservasHotel.DB.Data;
 namespace ReservasHotel.DB.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20220726025108_correcciones")]
-    partial class correcciones
+    [Migration("20220726223455_inicio")]
+    partial class inicio
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,23 +26,30 @@ namespace ReservasHotel.DB.Migrations
 
             modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Afiliado", b =>
                 {
-                    b.Property<int>("Cuil")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Cuil"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Apellido")
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
+                    b.Property<int>("Cuil")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("FechaCreacion")
+                        .IsRequired()
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
-                    b.HasKey("Cuil");
+                    b.HasKey("Id");
 
                     b.ToTable("Afiliados");
                 });

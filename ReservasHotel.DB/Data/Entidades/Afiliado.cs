@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace ReservasHotel.DB.Data.Entidades
 {
-    public class Afiliado
+    public class Afiliado:BaseEntidad
     {
-        [Key]
+        [Required]
         [MinLength(10, ErrorMessage = "El numero no puede ser menor a [1] caracteres")]
         public int Cuil { get; set; }
         [Required]
