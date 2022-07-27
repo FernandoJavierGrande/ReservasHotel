@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ReservasHotel.DB.Data;
 using ReservasHotel.DB.Data.Entidades;
 
@@ -16,6 +17,37 @@ namespace ReservasHotel.Server.Controllers
             this.dbContext = dbContext;
         }
         #endregion
+
+
+        #region get
+
+        [HttpGet]
+        public async Task<ActionResult<List<Afiliado>>> Get()
+        {
+            return await dbContext.Afiliados.ToListAsync();
+        }
+
+        [HttpGet("{Cuil}")]
+        public async Task<ActionResult<Afiliado>> Get(string Cuil)
+        {
+            var afiliado = await dbContext.Afiliados.Where(a => a.Cuil == Cuil).FirstOrDefaultAsync();
+
+            if (afiliado == null)
+            {
+                return NotFound($"El afiliado con cuil {Cuil} no existe. Verifique los numeros");
+            }
+            else
+            {
+                return afiliado;
+            }
+        }
+
+
+
+        #endregion
+
+
+
 
 
         [HttpPost]
