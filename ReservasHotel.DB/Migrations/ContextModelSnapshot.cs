@@ -54,7 +54,7 @@ namespace ReservasHotel.DB.Migrations
                     b.HasIndex(new[] { "Cuil" }, "cuil_Uq")
                         .IsUnique();
 
-                    b.ToTable("Afiliados");
+                    b.ToTable("Afiliados", (string)null);
                 });
 
             modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Dia", b =>
@@ -87,7 +87,7 @@ namespace ReservasHotel.DB.Migrations
                     b.HasIndex(new[] { "HabitacionId", "Fecha" }, "diaIdHab_Uq")
                         .IsUnique();
 
-                    b.ToTable("DiasReservas");
+                    b.ToTable("DiasReservas", (string)null);
                 });
 
             modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.EstadoPago", b =>
@@ -108,7 +108,7 @@ namespace ReservasHotel.DB.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EstadosDePago");
+                    b.ToTable("EstadosDePago", (string)null);
                 });
 
             modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Habitacion", b =>
@@ -135,7 +135,7 @@ namespace ReservasHotel.DB.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Habitaciones");
+                    b.ToTable("Habitaciones", (string)null);
                 });
 
             modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Privilegio", b =>
@@ -149,7 +149,7 @@ namespace ReservasHotel.DB.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Privilegios");
+                    b.ToTable("Privilegios", (string)null);
                 });
 
             modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Reserva", b =>
@@ -193,7 +193,7 @@ namespace ReservasHotel.DB.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("Reservas");
+                    b.ToTable("Reservas", (string)null);
                 });
 
             modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Usuario", b =>
@@ -231,7 +231,7 @@ namespace ReservasHotel.DB.Migrations
                     b.HasIndex(new[] { "NombreUsuario" }, "NUsuario_Uq")
                         .IsUnique();
 
-                    b.ToTable("Usuarios");
+                    b.ToTable("Usuarios", (string)null);
                 });
 
             modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Dia", b =>

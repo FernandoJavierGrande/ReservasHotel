@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace ReservasHotel.DB.Data.Entidades 
 {
     /* esta clase/tabla representa los dias y las habitaciones que puede tener una reseva
@@ -21,6 +22,8 @@ namespace ReservasHotel.DB.Data.Entidades
         [Required]
         public int HabitacionId { get; set; }
         [Required]
+        [DataType(DataType.Date)]   /*cambiar a string*/
+        //[MaxLength(10, ErrorMessage ="El Formato de la fecha debe ser DD/MM/AAAA")]
         public DateTime Fecha { get; set; }
         [Required]
         public int ReservaId { get; set; }
