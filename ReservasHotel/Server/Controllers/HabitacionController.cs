@@ -26,7 +26,7 @@ namespace ReservasHotel.Server.Controllers
 
 
         [HttpGet("{NumHabitacion:int}")]
-        public async Task<ActionResult<Habitacion>> Get(int NumHabitacion)
+        public async Task<ActionResult<string>> Get(int NumHabitacion)
         {
             var habitacion = await dbcontext.Habitaciones.Where(
                 e => e.N_DeHabitacion == NumHabitacion).FirstOrDefaultAsync();
@@ -36,7 +36,7 @@ namespace ReservasHotel.Server.Controllers
             }
             else
             {
-                return habitacion;
+                return $"Habitacion {habitacion.Tipo}. Obs: {habitacion.Obs}";
             }
         }
 

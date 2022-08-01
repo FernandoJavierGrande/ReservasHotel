@@ -6,7 +6,7 @@ using ReservasHotel.DB.Data.Entidades;
 namespace ReservasHotel.Server.Controllers
 {
     
-    public class DiasController : ControllerBase
+    public class DiasController 
     {
         
         private readonly Context dbcontext;
@@ -46,7 +46,7 @@ namespace ReservasHotel.Server.Controllers
         //    }
         //    else
         //    {
-        //        return BadRequest("Esta habitacion se encuentra ocupada en esta fecha.");
+        //         
         //    }
 
 

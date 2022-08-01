@@ -31,25 +31,37 @@ namespace ReservasHotel.Server.Controllers
             return await context.Reservaciones.ToListAsync(); 
         }
 
+
         #endregion
 
 
-        [HttpPost] // prueba, se va a agregar desde el controlador rva
-        public async Task<ActionResult<Reservaciones>> Post(Reservaciones reservaciones)
+        [HttpPost] 
+        public async Task<ActionResult<Reservaciones>> GuardarDia(Reservaciones reservaciones)
         {
-            try
+            var ocupado = context.Reservaciones.Where(x => x == reservaciones);
+
+            if (!ocupado.Contains(reservaciones))
             {
-                context.Reservaciones.Add(reservaciones);
-                await context.SaveChangesAsync();
+                try
+                {
+                    context.Reservaciones.Add(reservaciones);
+                    await context.SaveChangesAsync();
 
-                return reservaciones;
+                    return reservaciones;
 
+                }
+                catch (Exception)
+                {
+
+                    return BadRequest("No se completo la carga del nuevo usuario");
+                }
             }
-            catch (Exception)
+            else
             {
-
-                return BadRequest("No se completo la carga del nuevo usuario");
+                return BadRequest($"La habitacion se encuentra ocupada en la fecha " +
+                    $"{reservaciones.Fecha.Day}/{reservaciones.Fecha.Month}/{reservaciones.Fecha.Year}.");
             }
+            
         }
 
     }
