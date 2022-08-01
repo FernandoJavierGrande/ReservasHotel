@@ -27,7 +27,7 @@ namespace ReservasHotel.Server.Controllers
             return await dbContext.Afiliados.ToListAsync();
         }
 
-        [HttpGet("{BuscarCuil}")]
+        [HttpGet("{Cuil}")]
         public async Task<ActionResult<Afiliado>> Get(string Cuil)
         {
             var afiliado = await dbContext.Afiliados.Where(a => a.Cuil == Cuil).FirstOrDefaultAsync();
@@ -71,9 +71,6 @@ namespace ReservasHotel.Server.Controllers
         //}
 
         #endregion
-
-
-
 
 
         [HttpPost]

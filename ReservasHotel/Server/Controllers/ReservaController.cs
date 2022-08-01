@@ -40,15 +40,25 @@ namespace ReservasHotel.Server.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<Reserva>> PostRva(Reserva reserva, int idHab,string check, string obs, int pax = 0)
+        public async Task<ActionResult<Reserva>> PostRva(Reserva reserva, int idHab, int pax = 0)
         {
-            try
+            int cantidad = (reserva.F_fin.AddDays(1) - reserva.F_inicio).Days;
+
+            bool ocupado = validarDisponibilidad(idHab,reserva.F_inicio,cantidad);
+
+            Console.WriteLine($"vuelve de valDis {ocupado}");
+            if (!ocupado)
+            {
+                return BadRequest( $"La habitacion se encuentra ocupada en la/s fecha/s solicitada");
+            }
+
+            try 
             {
                 dbcontext.Reservas.Add(reserva).ToString();
                 await dbcontext.SaveChangesAsync();
 
-                int cantidad = (reserva.F_fin - reserva.F_inicio).Days;
-                Reservaciones diaReservado = new Reservaciones();
+                
+                Reservacion diaReservado = new Reservacion();
                 ReservacionesController saving = new ReservacionesController(dbcontext);
 
                 for (int i = 0; i < cantidad; i++)
@@ -57,18 +67,15 @@ namespace ReservasHotel.Server.Controllers
                     diaReservado.Fecha = reserva.F_inicio.AddDays(i);
                     diaReservado.ReservaId = reserva.Id;
                     diaReservado.Cant_Huespedes = pax;
-                    diaReservado.CheckInOut = check;
-                    diaReservado.Obs = obs;
-                    diaReservado.FechaCreacion = DateTime.Now;
 
                     Console.WriteLine($"iteracion {i}  {diaReservado.Fecha}");
 
 
                     await saving.GuardarDia(diaReservado);
-                    await dbcontext.SaveChangesAsync();
+                    
                 }
-     
 
+                await dbcontext.SaveChangesAsync();
                 return reserva;
             }
             catch (Exception)
@@ -76,6 +83,26 @@ namespace ReservasHotel.Server.Controllers
                 return BadRequest("No pudo agendar la reserva, vuelva a intentarlo ");
                 
             }
+        }
+
+
+        private bool validarDisponibilidad(int idhab,DateTime fInicio, int cantidad )
+        {
+            DateTime date;
+
+            for (int i = 0; i < cantidad; i++)
+            {
+                date = fInicio.AddDays(i);
+                
+                var ocupado = dbcontext.Reservaciones.Select(r => r.Fecha == date && r.HabitacionId == idhab).FirstOrDefault();
+                if (ocupado)
+                {
+                    Console.WriteLine($"metodo validar disponibilidad valor de ocupado: {ocupado}. ret false ");
+                    return false;
+                }
+            }
+            Console.WriteLine("metodo validar disp, ret true");
+            return true;
         }
 
     }

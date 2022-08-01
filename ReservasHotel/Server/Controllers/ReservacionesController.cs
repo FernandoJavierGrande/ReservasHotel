@@ -25,7 +25,7 @@ namespace ReservasHotel.Server.Controllers
         
 
         [HttpGet]
-        public async Task<ActionResult<List<Reservaciones>>> Get()
+        public async Task<ActionResult<List<Reservacion>>> Get()
         {
 
             return await context.Reservaciones.ToListAsync(); 
@@ -36,7 +36,7 @@ namespace ReservasHotel.Server.Controllers
 
 
         [HttpPost] 
-        public async Task<ActionResult<Reservaciones>> GuardarDia(Reservaciones reservaciones)
+        public async Task<ActionResult<Reservacion>> GuardarDia(Reservacion reservaciones)
         {
             var ocupado = context.Reservaciones.Where(x => x == reservaciones);
 

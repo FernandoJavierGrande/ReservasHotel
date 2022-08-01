@@ -16,7 +16,7 @@ namespace ReservasHotel.DB.Data.Entidades
     
     [Index(nameof(HabitacionId),nameof(Fecha), Name = "diaIdHab_Uq", IsUnique = true)]
     //la clave unica valida que una habitacion no puede reservarse si ya esta reservada en determinada fecha o viceversa
-    public class Reservaciones :BaseEntidad
+    public class Reservacion
     {
         
         [Required]
@@ -29,8 +29,6 @@ namespace ReservasHotel.DB.Data.Entidades
         public DateTime Fecha { get; set; }
         
         public int? Cant_Huespedes { get; set; }
-        public string CheckInOut { get; set; }
-        public string Obs { get; set; }
 
 
 

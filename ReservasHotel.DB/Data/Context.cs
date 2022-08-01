@@ -17,7 +17,7 @@ namespace ReservasHotel.DB.Data
 
         public DbSet<Reserva> Reservas { get; set; }
 
-        public DbSet<Reservaciones> Reservaciones { get; set; }
+        public DbSet<Reservacion> Reservaciones { get; set; }
 
         public DbSet<Habitacion> Habitaciones { get; set; }
 
@@ -32,7 +32,7 @@ namespace ReservasHotel.DB.Data
         
         protected override void OnModelCreating(ModelBuilder builder) // pk compuesto
         {
-            builder.Entity<Reservaciones>().HasKey(table => new {
+            builder.Entity<Reservacion>().HasKey(table => new {
                 table.HabitacionId,
                 table.Fecha
             });
