@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace ReservasHotel.DB.Data.Entidades
 {
-    public class Privilegio
+    public class Privilegio:BaseEntidad
     {
-        public string Id { get; set; }
+
         [Required]
         public string Permiso { get; set; }
 

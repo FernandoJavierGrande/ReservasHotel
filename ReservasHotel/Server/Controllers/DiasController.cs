@@ -5,8 +5,7 @@ using ReservasHotel.DB.Data.Entidades;
 
 namespace ReservasHotel.Server.Controllers
 {
-    [ApiController]
-    [Route("api/fechas")]
+    
     public class DiasController : ControllerBase
     {
         
@@ -23,35 +22,48 @@ namespace ReservasHotel.Server.Controllers
 
 
 
-        [HttpPost]
-        public async Task<ActionResult<Dia>> Post(Dia dia)
-        {
-            
-            var ocupado = dbcontext.DiasReservas.Where(x => x == dia);
+        //[HttpPost()]
+        //public async Task<ActionResult<Reservaciones>> Post(Reservaciones dia)
+        //{
 
-            if (!ocupado.Contains(dia))
-            {
-                
-                try
-                {
-                    dbcontext.DiasReservas.Add(dia);
+        //    var ocupado = dbcontext.Reservaciones.Where(x => x == dia);
 
-                    await dbcontext.SaveChangesAsync();
+        //    if (!ocupado.Contains(dia))
+        //    {
 
-                    return dia;
-                }
-                catch (Exception e)
-                {
-                    return BadRequest($"No se puedo agendar el dia {dia.Fecha} al calendario. " + e.Message);
-                }
-            }
-            else
-            {
-                return BadRequest("Esta habitacion se encuentra ocupada en esta fecha.");
-            }
+        //        try
+        //        {
+        //            dbcontext.Reservaciones.Add(dia);
 
-            
-        }
+        //            await dbcontext.SaveChangesAsync();
+
+        //            return dia;
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            return BadRequest($"No se puedo agendar el dia {dia.Fecha} al calendario. " + e.Message);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        return BadRequest("Esta habitacion se encuentra ocupada en esta fecha.");
+        //    }
+
+
+        //}
+
+
+        //[HttpGet]
+        //public async Task<ActionResult<List<Reservaciones>>> GetReservas(DateTime fecha, int cantidad = 10)
+        //{
+        //    DateTime fechaLimite = fecha.AddDays(cantidad);
+
+        //    var diasReservados = dbcontext.DiasReservas.Where(
+        //        d => d.Fecha >= fecha && d.Fecha <= fechaLimite)
+        //        .ToListAsync();
+
+        //    return  await diasReservados;
+        //}
 
 
     }

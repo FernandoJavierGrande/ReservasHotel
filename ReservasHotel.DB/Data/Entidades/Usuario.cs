@@ -21,13 +21,15 @@ namespace ReservasHotel.DB.Data.Entidades
         [Required]
         public int Legajo { get; set; }
         [Required]
-        public string PrivilegioId { get; set; }
+        public int PrivilegioId { get; set; }
 
         #endregion
 
         #region listas
 
-        public List<Reserva> Reservas { get; set; }
+        public List<Reserva> Reservas { get; set; }  // un usuario hace cero o muchas reservas
+
+
 
         #endregion
     }

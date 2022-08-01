@@ -12,8 +12,8 @@ using ReservasHotel.DB.Data;
 namespace ReservasHotel.DB.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20220727145406_afiliadocuil")]
-    partial class afiliadocuil
+    [Migration("20220731231739_inicioBD")]
+    partial class inicioBD
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -39,7 +39,8 @@ namespace ReservasHotel.DB.Migrations
 
                     b.Property<string>("Cuil")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(11)
+                        .HasColumnType("nvarchar(11)");
 
                     b.Property<DateTime?>("FechaCreacion")
                         .IsRequired()
@@ -52,40 +53,10 @@ namespace ReservasHotel.DB.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Afiliados");
-                });
-
-            modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Dia", b =>
-                {
-                    b.Property<int>("HabitacionId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Fecha")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("Cant_Huespedes")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Early")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("Late")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Obs")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ReservaId")
-                        .HasColumnType("int");
-
-                    b.HasKey("HabitacionId", "Fecha");
-
-                    b.HasIndex("ReservaId");
-
-                    b.HasIndex(new[] { "HabitacionId", "Fecha" }, "diaIdHab_Uq")
+                    b.HasIndex(new[] { "Cuil" }, "cuil_Uq")
                         .IsUnique();
 
-                    b.ToTable("DiasReservas");
+                    b.ToTable("Afiliados");
                 });
 
             modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.EstadoPago", b =>
@@ -138,8 +109,15 @@ namespace ReservasHotel.DB.Migrations
 
             modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Privilegio", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime?>("FechaCreacion")
+                        .IsRequired()
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Permiso")
                         .IsRequired()
@@ -194,6 +172,43 @@ namespace ReservasHotel.DB.Migrations
                     b.ToTable("Reservas");
                 });
 
+            modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Reservaciones", b =>
+                {
+                    b.Property<int>("HabitacionId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("Cant_Huespedes")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CheckInOut")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("FechaCreacion")
+                        .IsRequired()
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Obs")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ReservaId")
+                        .HasColumnType("int");
+
+                    b.HasKey("HabitacionId", "Fecha");
+
+                    b.HasIndex("ReservaId");
+
+                    b.HasIndex(new[] { "HabitacionId", "Fecha" }, "diaIdHab_Uq")
+                        .IsUnique();
+
+                    b.ToTable("Reservaciones");
+                });
+
             modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Usuario", b =>
                 {
                     b.Property<int>("Id")
@@ -214,9 +229,8 @@ namespace ReservasHotel.DB.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
-                    b.Property<string>("PrivilegioId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("PrivilegioId")
+                        .HasColumnType("int");
 
                     b.Property<string>("pass")
                         .IsRequired()
@@ -232,21 +246,6 @@ namespace ReservasHotel.DB.Migrations
                     b.ToTable("Usuarios");
                 });
 
-            modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Dia", b =>
-                {
-                    b.HasOne("ReservasHotel.DB.Data.Entidades.Habitacion", null)
-                        .WithMany("Dias")
-                        .HasForeignKey("HabitacionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ReservasHotel.DB.Data.Entidades.Reserva", null)
-                        .WithMany("diasRes")
-                        .HasForeignKey("ReservaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Reserva", b =>
                 {
                     b.HasOne("ReservasHotel.DB.Data.Entidades.Afiliado", null)
@@ -256,7 +255,7 @@ namespace ReservasHotel.DB.Migrations
                         .IsRequired();
 
                     b.HasOne("ReservasHotel.DB.Data.Entidades.EstadoPago", null)
-                        .WithMany("reservas")
+                        .WithMany("Reservas")
                         .HasForeignKey("EstadoPagoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -264,6 +263,21 @@ namespace ReservasHotel.DB.Migrations
                     b.HasOne("ReservasHotel.DB.Data.Entidades.Usuario", null)
                         .WithMany("Reservas")
                         .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Reservaciones", b =>
+                {
+                    b.HasOne("ReservasHotel.DB.Data.Entidades.Habitacion", null)
+                        .WithMany("Reservaciones")
+                        .HasForeignKey("HabitacionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ReservasHotel.DB.Data.Entidades.Reserva", null)
+                        .WithMany("Reservaciones")
+                        .HasForeignKey("ReservaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -284,12 +298,12 @@ namespace ReservasHotel.DB.Migrations
 
             modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.EstadoPago", b =>
                 {
-                    b.Navigation("reservas");
+                    b.Navigation("Reservas");
                 });
 
             modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Habitacion", b =>
                 {
-                    b.Navigation("Dias");
+                    b.Navigation("Reservaciones");
                 });
 
             modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Privilegio", b =>
@@ -299,7 +313,7 @@ namespace ReservasHotel.DB.Migrations
 
             modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Reserva", b =>
                 {
-                    b.Navigation("diasRes");
+                    b.Navigation("Reservaciones");
                 });
 
             modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Usuario", b =>

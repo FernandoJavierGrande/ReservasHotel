@@ -12,8 +12,8 @@ namespace ReservasHotel.DB.Data.Entidades
     public class Afiliado:BaseEntidad
     {
         [Required]
-        [MinLength(10, ErrorMessage = "El numero no puede ser menor a [1] caracteres")]
-        [MaxLength(11, ErrorMessage = "El numero no puede ser mayor a [1] caracteres")]
+        [MinLength(10, ErrorMessage = "El numero no puede ser menor a {1} caracteres")]
+        [MaxLength(11, ErrorMessage = "El numero no puede ser mayor a {1} caracteres")]
         
         public string Cuil { get; set; }
         [Required]
@@ -25,7 +25,8 @@ namespace ReservasHotel.DB.Data.Entidades
 
         #region lista
 
-        public List<Reserva> Rva { get; set; }
+        public List<Reserva> Rva   { get; set; }
+
 
         #endregion  
 

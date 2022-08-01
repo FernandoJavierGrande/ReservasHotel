@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ReservasHotel.DB.Migrations
 {
-    public partial class inicio : Migration
+    public partial class inicioBD : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -15,7 +15,7 @@ namespace ReservasHotel.DB.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Cuil = table.Column<int>(type: "int", nullable: false),
+                    Cuil = table.Column<string>(type: "nvarchar(11)", maxLength: 11, nullable: false),
                     Nombre = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     Apellido = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -59,8 +59,10 @@ namespace ReservasHotel.DB.Migrations
                 name: "Privilegios",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Permiso = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Permiso = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -76,7 +78,7 @@ namespace ReservasHotel.DB.Migrations
                     NombreUsuario = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     pass = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Legajo = table.Column<int>(type: "int", nullable: false),
-                    PrivilegioId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    PrivilegioId = table.Column<int>(type: "int", nullable: false),
                     FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -129,28 +131,29 @@ namespace ReservasHotel.DB.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DiasReservas",
+                name: "Reservaciones",
                 columns: table => new
                 {
                     HabitacionId = table.Column<int>(type: "int", nullable: false),
                     Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ReservaId = table.Column<int>(type: "int", nullable: false),
                     Cant_Huespedes = table.Column<int>(type: "int", nullable: true),
-                    Late = table.Column<bool>(type: "bit", nullable: false),
-                    Early = table.Column<bool>(type: "bit", nullable: false),
-                    Obs = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    CheckInOut = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Obs = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DiasReservas", x => new { x.HabitacionId, x.Fecha });
+                    table.PrimaryKey("PK_Reservaciones", x => new { x.HabitacionId, x.Fecha });
                     table.ForeignKey(
-                        name: "FK_DiasReservas_Habitaciones_HabitacionId",
+                        name: "FK_Reservaciones_Habitaciones_HabitacionId",
                         column: x => x.HabitacionId,
                         principalTable: "Habitaciones",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_DiasReservas_Reservas_ReservaId",
+                        name: "FK_Reservaciones_Reservas_ReservaId",
                         column: x => x.ReservaId,
                         principalTable: "Reservas",
                         principalColumn: "Id",
@@ -158,14 +161,20 @@ namespace ReservasHotel.DB.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "cuil_Uq",
+                table: "Afiliados",
+                column: "Cuil",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "diaIdHab_Uq",
-                table: "DiasReservas",
+                table: "Reservaciones",
                 columns: new[] { "HabitacionId", "Fecha" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_DiasReservas_ReservaId",
-                table: "DiasReservas",
+                name: "IX_Reservaciones_ReservaId",
+                table: "Reservaciones",
                 column: "ReservaId");
 
             migrationBuilder.CreateIndex(
@@ -198,7 +207,7 @@ namespace ReservasHotel.DB.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "DiasReservas");
+                name: "Reservaciones");
 
             migrationBuilder.DropTable(
                 name: "Habitaciones");

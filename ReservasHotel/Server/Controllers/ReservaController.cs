@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ReservasHotel.DB.Data;
 using ReservasHotel.DB.Data.Entidades;
 
@@ -18,6 +19,13 @@ namespace ReservasHotel.Server.Controllers
         }
         #endregion
 
+        [HttpGet]
+        public async Task<ActionResult<List<Reserva>>> Get()
+        {
+            return await dbcontext.Reservas.ToListAsync();
+        }
+
+        
 
 
 
@@ -31,9 +39,9 @@ namespace ReservasHotel.Server.Controllers
 
                 return reserva;
             }
-            catch (Exception e )
+            catch (Exception)
             {
-                return BadRequest("No pudo agendar la reserva, vuelva a intentarlo " + e.Message );
+                return BadRequest("No pudo agendar la reserva, vuelva a intentarlo ");
                 
             }
         }

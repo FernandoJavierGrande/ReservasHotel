@@ -16,21 +16,24 @@ namespace ReservasHotel.DB.Data.Entidades
     
     [Index(nameof(HabitacionId),nameof(Fecha), Name = "diaIdHab_Uq", IsUnique = true)]
     //la clave unica valida que una habitacion no puede reservarse si ya esta reservada en determinada fecha o viceversa
-    public class Dia
+    public class Reservaciones :BaseEntidad
     {
         
         [Required]
         public int HabitacionId { get; set; }
         [Required]
-        [DataType(DataType.Date)]   /*cambiar a string*/
-        //[MaxLength(10, ErrorMessage ="El Formato de la fecha debe ser DD/MM/AAAA")]
-        public DateTime Fecha { get; set; }
-        [Required]
+        
         public int ReservaId { get; set; }
+        [Required]
+        [DataType(DataType.Date)]  
+        public DateTime Fecha { get; set; }
+        
         public int? Cant_Huespedes { get; set; }
-        public bool Late { get; set; }
-        public bool Early { get; set; }
+        public string CheckInOut { get; set; }
         public string Obs { get; set; }
+
+
+
 
     }
 }

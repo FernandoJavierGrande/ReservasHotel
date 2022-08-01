@@ -27,7 +27,7 @@ namespace ReservasHotel.Server.Controllers
             return await dbContext.Afiliados.ToListAsync();
         }
 
-        [HttpGet("{Cuil}")]
+        [HttpGet("{BuscarCuil}")]
         public async Task<ActionResult<Afiliado>> Get(string Cuil)
         {
             var afiliado = await dbContext.Afiliados.Where(a => a.Cuil == Cuil).FirstOrDefaultAsync();
@@ -42,7 +42,33 @@ namespace ReservasHotel.Server.Controllers
             }
         }
 
+        //[HttpGet("{afiliado:int}")]
+        //public async Task<ActionResult<List<Reserva>>> GetRva(int afiliado)
+        //{
+        //    var reserva = await dbContext.Reservas.Where(r => r.AfiliadoId == afiliado)
+        //        .Include(a => a.).ToListAsync();
 
+        //    if (reserva != null)
+        //    {
+        //        return reserva;
+        //    }
+        //    return NotFound("no se encontro");
+        //}
+        //[HttpGet("Reservas")]
+
+
+        //public async Task<ActionResult<List<Afiliado>>> GetCuil(string cuil)
+        //{
+        //    var reserva = await dbContext.Afiliados.Where(r => r.Cuil == cuil)
+        //        .Include(a => a.Rva)
+        //        .ToListAsync();
+
+        //    if (reserva != null)
+        //    {
+        //        return reserva;
+        //    }
+        //    return NotFound("no se encontro");
+        //}
 
         #endregion
 

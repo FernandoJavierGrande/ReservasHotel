@@ -17,7 +17,7 @@ namespace ReservasHotel.DB.Data.Entidades
         public string Obs { get; set; }
 
         #region lista   
-        public List<Dia> Dias{ get; set; }
+        public List<Reservaciones> Reservaciones { get; set; }
         #endregion
     }
 }

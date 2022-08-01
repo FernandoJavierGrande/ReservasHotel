@@ -40,7 +40,7 @@ namespace ReservasHotel.Server.Controllers
             }
         }
 
-        [HttpGet("tipo")]
+        [HttpGet("TipoDeHabitacion")]
         public ActionResult<List<int>> GetCode(string tipo)
         {
             var numeros = dbcontext.Habitaciones.Where(x => x.Tipo == tipo).Select(a => a.N_DeHabitacion).ToList();
@@ -71,9 +71,9 @@ namespace ReservasHotel.Server.Controllers
                 await dbcontext.SaveChangesAsync();
                 return Habitacion;
             }
-            catch (Exception e )
+            catch (Exception)
             {
-                return BadRequest("No se completo el agregado de una nueva habitacion " + e.Message);
+                return BadRequest("No se completo el agregado de una nueva habitacion ");
             }
         }
         #endregion
