@@ -31,7 +31,7 @@ namespace ReservasHotel.DB.Data.Entidades
         public int? Cant_Huespedes { get; set; }
 
 
-
+        public Habitacion Habitaciones { get; set;}
 
     }
 }

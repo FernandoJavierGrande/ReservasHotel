@@ -30,7 +30,7 @@ namespace ReservasHotel.Server.Controllers
         [HttpGet("{Cuil}")]
         public async Task<ActionResult<Afiliado>> Get(string Cuil)
         {
-            var afiliado = await dbContext.Afiliados.Where(a => a.Cuil == Cuil).FirstOrDefaultAsync();
+            var afiliado = await dbContext.Afiliados.Where(a => a.Cuil == Cuil).Include(x => x.Rva).FirstOrDefaultAsync();
 
             if (afiliado == null)
             {

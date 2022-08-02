@@ -10,7 +10,7 @@ namespace ReservasHotel.DB.Data.Entidades
     public class Reserva: BaseEntidad
     {
         
-        [Required(ErrorMessage ="Las fechas son obligatorias")]
+        [Required(ErrorMessage = "Las fechas son obligatorias")]
         public DateTime F_inicio { get; set; }
         [Required(ErrorMessage = "Las fechas son obligatorias")]
         public DateTime F_fin { get; set; }

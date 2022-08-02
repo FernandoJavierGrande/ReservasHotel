@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReservasHotel.Server", "ReservasHotel\Server\ReservasHotel.Server.csproj", "{DA19C1A6-E9D9-4D7C-9179-26349CC7FD74}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReservasHotel.Server", "ReservasHotel\Server\ReservasHotel.Server.csproj", "{DA19C1A6-E9D9-4D7C-9179-26349CC7FD74}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReservasHotel.Client", "ReservasHotel\Client\ReservasHotel.Client.csproj", "{896758FC-089C-410B-A21B-BEDA8A8E03A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReservasHotel.Client", "ReservasHotel\Client\ReservasHotel.Client.csproj", "{896758FC-089C-410B-A21B-BEDA8A8E03A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReservasHotel.Shared", "ReservasHotel\Shared\ReservasHotel.Shared.csproj", "{F8A7C48A-B34D-46C9-8924-3E5ED2CF6D96}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReservasHotel.Shared", "ReservasHotel\Shared\ReservasHotel.Shared.csproj", "{F8A7C48A-B34D-46C9-8924-3E5ED2CF6D96}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReservasHotel.DB", "ReservasHotel.DB\ReservasHotel.DB.csproj", "{A2CD9DF5-7F33-4A08-A009-DF2623C12A9C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReservasHotel.DB", "ReservasHotel.DB\ReservasHotel.DB.csproj", "{A2CD9DF5-7F33-4A08-A009-DF2623C12A9C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

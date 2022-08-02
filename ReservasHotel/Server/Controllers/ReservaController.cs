@@ -38,72 +38,90 @@ namespace ReservasHotel.Server.Controllers
 
 
 
-
-        [HttpPost]
-        public async Task<ActionResult<Reserva>> PostRva(Reserva reserva, int idHab, int pax = 0)
+        [HttpPost("NuevaReserva")]
+        public async Task<ActionResult<Reserva>> Post(Reserva NuevaReserva)
         {
-            int cantidad = (reserva.F_fin.AddDays(1) - reserva.F_inicio).Days;
-
-            bool ocupado = validarDisponibilidad(idHab,reserva.F_inicio,cantidad);
-
-            Console.WriteLine($"vuelve de valDis {ocupado}");
-            if (!ocupado)
+            try
             {
-                return BadRequest( $"La habitacion se encuentra ocupada en la/s fecha/s solicitada");
-            }
+                dbcontext.Reservas.Add(NuevaReserva);
+                 await dbcontext.SaveChangesAsync();
 
-            try 
-            {
-                dbcontext.Reservas.Add(reserva).ToString();
-                await dbcontext.SaveChangesAsync();
-
-                
-                Reservacion diaReservado = new Reservacion();
-                ReservacionesController saving = new ReservacionesController(dbcontext);
-
-                for (int i = 0; i < cantidad; i++)
-                {
-                    diaReservado.HabitacionId = idHab;
-                    diaReservado.Fecha = reserva.F_inicio.AddDays(i);
-                    diaReservado.ReservaId = reserva.Id;
-                    diaReservado.Cant_Huespedes = pax;
-
-                    Console.WriteLine($"iteracion {i}  {diaReservado.Fecha}");
-
-
-                    await saving.GuardarDia(diaReservado);
-                    
-                }
-
-                await dbcontext.SaveChangesAsync();
-                return reserva;
+                return NuevaReserva;
             }
             catch (Exception)
             {
-                return BadRequest("No pudo agendar la reserva, vuelva a intentarlo ");
-                
+
+               return BadRequest("no se guardó la reserva ");
             }
         }
 
 
-        private bool validarDisponibilidad(int idhab,DateTime fInicio, int cantidad )
+        [HttpPost("/Reservaciones")]
+        public async Task<ActionResult<Reserva>> Post(Reserva reserva, int idHab, int pax = 0)
         {
-            DateTime date;
-
-            for (int i = 0; i < cantidad; i++)
+            if (reserva.F_inicio > reserva.F_fin)
             {
-                date = fInicio.AddDays(i);
-                
-                var ocupado = dbcontext.Reservaciones.Select(r => r.Fecha == date && r.HabitacionId == idhab).FirstOrDefault();
-                if (ocupado)
+                return BadRequest("Inconsistencias en las fechas.");
+            }
+
+            Reservacion reservacion = new Reservacion();
+
+            int cantidad = (reserva.F_fin - reserva.F_inicio).Days + 1;
+            try
+            {
+                for (int i = 0; i < cantidad; i++)
                 {
-                    Console.WriteLine($"metodo validar disponibilidad valor de ocupado: {ocupado}. ret false ");
-                    return false;
+                    reservacion.HabitacionId = idHab;
+                    reservacion.Fecha = reserva.F_inicio.AddDays(i);
+                    reservacion.Cant_Huespedes = pax;
+
+
+                    reserva.Reservaciones.Add(reservacion);
+                }
+                dbcontext.Reservas.Add(reserva);
+                await dbcontext.SaveChangesAsync();
+
+                return Ok(reserva);
+            }
+            catch (Exception)
+            {
+
+                return BadRequest("No pudo agendar la reserva, vuelva a intentarlo ");
+            }
+
+        }
+        [HttpPost]
+        public async Task<ActionResult<List<Reservacion>>> GuardarDia(List<Reservacion> AgregarHabitaciones)
+        {
+           
+            foreach (var item in AgregarHabitaciones)
+            {
+                var ocupado = dbcontext.Reservaciones.Where(x => x == item);
+                if (ocupado.Contains(item))
+                {
+                    var salida = dbcontext.Habitaciones.Where(h => h.Id == item.HabitacionId).Select(x => x.N_DeHabitacion).FirstOrDefault();
+
+                    return BadRequest($"La habitacion N° {salida} en la fecha fecha {item.Fecha} no esta disponible");
                 }
             }
-            Console.WriteLine("metodo validar disp, ret true");
-            return true;
-        }
 
+            try
+            {
+                foreach (var item in AgregarHabitaciones)
+                {
+                    dbcontext.Reservaciones.Add(item);
+                    
+                }
+                var resp = await dbcontext.SaveChangesAsync();
+                
+                return AgregarHabitaciones.ToList();
+            }
+            catch (Exception e)
+            {
+                return BadRequest("No se completo el guardado " + e);
+                
+            }
+
+        }
     }
 }
