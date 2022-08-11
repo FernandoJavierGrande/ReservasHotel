@@ -24,6 +24,7 @@ namespace ReservasHotel.DB.Data.Entidades
         [Required]
         
         public int ReservaId { get; set; }
+
         [Required]
         [DataType(DataType.Date)]  
         public DateTime Fecha { get; set; }
@@ -31,7 +32,6 @@ namespace ReservasHotel.DB.Data.Entidades
         public int? Cant_Huespedes { get; set; }
 
 
-        public Habitacion Habitaciones { get; set;}
-
+        
     }
 }

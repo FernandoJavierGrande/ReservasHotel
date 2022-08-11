@@ -13,7 +13,7 @@ namespace ReservasHotel.DB.Data.Entidades
         public string Estado { get; set; }
 
         #region lista
-        public List<Reserva> Reservas { get; set; } // un pago esta en 0 o muchas reservas
+        //public List<Reserva> Reservas { get; set; } // un pago esta en 0 o muchas reservas
         #endregion
     }
 }

@@ -21,7 +21,7 @@ namespace ReservasHotel.DB.Data.Entidades
         [Required]
         public int Legajo { get; set; }
         [Required]
-        public int PrivilegioId { get; set; }
+        public string Privilegio { get; set; }
 
         #endregion
 

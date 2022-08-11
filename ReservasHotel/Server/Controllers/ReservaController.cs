@@ -21,19 +21,19 @@ namespace ReservasHotel.Server.Controllers
 
         [HttpGet]
         public async Task<ActionResult<List<Reserva>>> Get()
-        {
-            return await dbcontext.Reservas.ToListAsync();
-        }
+          => await dbcontext.Reservas.ToListAsync();
+
 
         [HttpGet("{resid}")]
         public async Task<ActionResult<List<Reserva>>> Getid(int resid)
         {
-            var reservaciones = await dbcontext.Reservas
+            var reservas = await dbcontext.Reservas
                 .Where(r => r.Id == resid)
                 .Include(x => x.Reservaciones)
-                .ToListAsync();
+                .ToListAsync();  
 
-            return reservaciones;
+
+            return reservas;
         }
 
 
@@ -57,7 +57,7 @@ namespace ReservasHotel.Server.Controllers
 
 
         [HttpPost("/Reservaciones")]
-        public async Task<ActionResult<Reserva>> Post(Reserva reserva, int idHab, int pax = 0)
+        public async Task<ActionResult<Reserva>> Post(Reserva reserva, int idHab, int pax = 10)
         {
             if (reserva.F_inicio > reserva.F_fin)
             {
@@ -94,7 +94,7 @@ namespace ReservasHotel.Server.Controllers
         public async Task<ActionResult<List<Reservacion>>> GuardarDia(List<Reservacion> AgregarHabitaciones)
         {
            
-            foreach (var item in AgregarHabitaciones)
+            foreach (var item in AgregarHabitaciones) //valida que no exista una uq dentro de la reserva
             {
                 var ocupado = dbcontext.Reservaciones.Where(x => x == item);
                 if (ocupado.Contains(item))
@@ -116,9 +116,9 @@ namespace ReservasHotel.Server.Controllers
                 
                 return AgregarHabitaciones.ToList();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                return BadRequest("No se completo el guardado " + e);
+                return BadRequest("No se completo el guardado " );
                 
             }
 

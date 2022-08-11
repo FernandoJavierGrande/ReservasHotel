@@ -19,13 +19,14 @@ namespace ReservasHotel.DB.Data.Entidades
         [Required]
         public int AfiliadoId { get; set; }        
         [Required]
-        public int EstadoPagoId { get; set; }
+        public string EstadoPago { get; set; }
         [Required]
         public bool Estado { get; set; }
         public string Obs { get; set; }
 
         #region lista
         public List<Reservacion> Reservaciones { get; set; }
+
 
         #endregion
     }

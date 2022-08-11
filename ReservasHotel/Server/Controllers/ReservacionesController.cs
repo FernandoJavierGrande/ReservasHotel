@@ -31,9 +31,23 @@ namespace ReservasHotel.Server.Controllers
             return await context.Reservaciones.ToListAsync(); 
         }
 
+        [HttpGet("/DiasReservados")]
+        public async Task<ActionResult<List<Reservacion>>> GetReservas(DateTime fecha, int cantidad = 10)
+        {
+            DateTime fechaLimite = fecha.AddDays(cantidad);
+
+            var diasReservados = context.Reservaciones.Where(
+                d => d.Fecha >= fecha && d.Fecha <= fechaLimite)
+                .ToListAsync();
+
+            return await diasReservados;
+        }
+
 
         #endregion
 
+
+        #region post
 
         [HttpPost] 
         public async Task<ActionResult<Reservacion>> GuardarDia(Reservacion reservaciones)
@@ -63,6 +77,8 @@ namespace ReservasHotel.Server.Controllers
             }
             
         }
+        #endregion
+
 
     }
 }

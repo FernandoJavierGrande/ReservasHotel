@@ -21,9 +21,9 @@ namespace ReservasHotel.DB.Data
 
         public DbSet<Habitacion> Habitaciones { get; set; }
 
-        public DbSet<EstadoPago> EstadosDePago { get; set; }
+        //public DbSet<EstadoPago> EstadosDePago { get; set; } eliminar
 
-        public DbSet<Privilegio> Privilegios { get; set; }
+        //public DbSet<Privilegio> Privilegios { get; set; } elimimar
 
         public DbSet<Afiliado> Afiliados { get; set; }
 

@@ -14,7 +14,7 @@ namespace ReservasHotel.DB.Data.Entidades
         public string Permiso { get; set; }
 
         #region lista
-        public List<Usuario> usuarios { get; set; }
+        //public List<Usuario> usuarios { get; set; }
         #endregion
 
     }
