@@ -36,8 +36,6 @@ namespace ReservasHotel.Server.Controllers
             return reservas;
         }
 
-
-
         [HttpPost("NuevaReserva")]
         public async Task<ActionResult<Reserva>> Post(Reserva NuevaReserva)
         {
