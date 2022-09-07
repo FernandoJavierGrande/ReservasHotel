@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,6 +28,11 @@ namespace ReservasHotel.DB.Data.Entidades
         #region lista
         public List<Reservacion> Reservaciones { get; set; }
 
+        [NotMapped]
+        public List<int> HabitacionesEnLaReserva{ get; set; } //sirven para construir una reserva con reservaciones
+                                                              //multiples de forma automatica
+        [NotMapped]
+        public List<int> PaxPorHabitacion { get; set; }
 
         #endregion
     }

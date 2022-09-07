@@ -49,19 +49,19 @@ namespace ReservasHotel.Server.Controllers
         {
             try
             {
-                var IdUser = context.Usuarios      
+                var User = context.Usuarios      
                     .Where(x => x.NombreUsuario == usuario && x.pass == clave)
                     .FirstOrDefault();
 
-                if (IdUser == null)
+                if (User == null)
                     throw new Exception();
 
 
                 var claims = new List<Claim> //guarda los datos de la sesion 
                 {
                     new Claim(ClaimTypes.Name, usuario),
-                    new Claim("Id", IdUser.Id.ToString()),
-                    new Claim("Leg", IdUser.Legajo.ToString()),
+                    new Claim("Id", User.Id.ToString()),
+                    new Claim("Leg", User.Legajo.ToString()),
                 };
 
                 
@@ -77,11 +77,11 @@ namespace ReservasHotel.Server.Controllers
                     (CookieAuthenticationDefaults.AuthenticationScheme,
                     new ClaimsPrincipal(claimsIdentity));
 
-                return Ok($"id user {IdUser}");
+                return Ok($"id user {User}");
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest("El usuario o contraseña no son correctos ");
+                return BadRequest("El usuario o contraseña no son correctos " + e );
             }
         }
     }

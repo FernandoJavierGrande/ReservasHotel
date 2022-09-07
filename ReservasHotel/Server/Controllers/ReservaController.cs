@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ReservasHotel.DB.Data;
 using ReservasHotel.DB.Data.Entidades;
 
 namespace ReservasHotel.Server.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/Reserva")]
     public class ReservaController : ControllerBase
@@ -32,63 +34,62 @@ namespace ReservasHotel.Server.Controllers
                 .Include(x => x.Reservaciones)
                 .ToListAsync();  
 
-
             return reservas;
         }
 
-        [HttpPost("NuevaReserva")]
-        public async Task<ActionResult<Reserva>> Post(Reserva NuevaReserva)
+        [HttpPost("/AgregarNuevaReserva")] // recibe una reserva y la hab creando las reservaciones correspondientes y guarda
+        public async Task<ActionResult<Reserva>> Post(Reserva reserva)
         {
-            try
-            {
-                dbcontext.Reservas.Add(NuevaReserva);
-                 await dbcontext.SaveChangesAsync();
+            reserva.UsuarioId = int.Parse(User.Claims.Where(x => x.Type == "Id").Select(i => i.Value).First());
 
-                return NuevaReserva;
-            }
-            catch (Exception)
-            {
-
-               return BadRequest("no se guardó la reserva ");
-            }
-        }
-
-
-        [HttpPost("/Reservaciones")]
-        public async Task<ActionResult<Reserva>> Post(Reserva reserva, int idHab, int pax = 10)
-        {
-            if (reserva.F_inicio > reserva.F_fin)
-            {
+            if ( reserva.F_inicio > reserva.F_fin)
                 return BadRequest("Inconsistencias en las fechas.");
-            }
 
-            Reservacion reservacion = new Reservacion();
+            Reservacion reservacion;
 
-            int cantidad = (reserva.F_fin - reserva.F_inicio).Days + 1;
+            int canDeDias = (reserva.F_fin - reserva.F_inicio).Days + 1;
+            int cantDeHab = reserva.HabitacionesEnLaReserva.Count();
+
+            Console.WriteLine($" dias: {canDeDias}, cant hab {cantDeHab} ");
+
             try
             {
-                for (int i = 0; i < cantidad; i++)
+                for (int j = 0; j < cantDeHab; j++)
                 {
-                    reservacion.HabitacionId = idHab;
-                    reservacion.Fecha = reserva.F_inicio.AddDays(i);
-                    reservacion.Cant_Huespedes = pax;
+                    Console.WriteLine($" j = {j} valor de hab[j] = {reserva.HabitacionesEnLaReserva[j]} ");
 
+                    for (int i = 0; i < canDeDias; i++)
+                    {
+                        reservacion = new Reservacion();
 
-                    reserva.Reservaciones.Add(reservacion);
+                        reservacion.HabitacionId = reserva.HabitacionesEnLaReserva[j];
+
+                        reservacion.Fecha = reserva.F_inicio.AddDays(i);
+
+                        Console.WriteLine($"fecha {reserva.F_inicio.AddDays(i)} , res.fech {reservacion.Fecha}");
+
+                        reservacion.Cant_Huespedes = reserva.PaxPorHabitacion[j];
+
+                        reserva.Reservaciones.Add(reservacion);
+
+                        Console.WriteLine($" i= {i} ");
+                    }
                 }
                 dbcontext.Reservas.Add(reserva);
+
                 await dbcontext.SaveChangesAsync();
 
                 return Ok(reserva);
             }
-            catch (Exception)
+            catch (Exception e)
             {
 
-                return BadRequest("No pudo agendar la reserva, vuelva a intentarlo ");
+                return BadRequest("No pudo agendar la reserva, vuelva a intentarlo " + e);
             }
 
         }
-        [HttpPost]
+
+        [HttpPost("/agregarHabitaciones")]
         public async Task<ActionResult<List<Reservacion>>> GuardarDia(List<Reservacion> AgregarHabitaciones)
         {
            
