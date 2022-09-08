@@ -54,7 +54,7 @@ namespace ReservasHotel.Server.Controllers
                     .FirstOrDefault();
 
                 if (User == null)
-                    throw new Exception();
+                    throw new Exception("");
 
 
                 var claims = new List<Claim> //guarda los datos de la sesion 

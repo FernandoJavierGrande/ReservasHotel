@@ -10,12 +10,12 @@ namespace ReservasHotel.Server.Controllers
     [Route("api/Fechas")]
     public class ReservacionesController :ControllerBase
     {
-        private readonly Context context;
+        private readonly Context dbcontext;
 
         #region Ctor
         public ReservacionesController(Context context)
         {
-            this.context = context;
+            this.dbcontext = context;
         }
         #endregion
 
@@ -28,7 +28,7 @@ namespace ReservasHotel.Server.Controllers
         public async Task<ActionResult<List<Reservacion>>> Get()
         {
 
-            return await context.Reservaciones.ToListAsync(); 
+            return await dbcontext.Reservaciones.ToListAsync(); 
         }
 
         [HttpGet("/DiasReservados")]
@@ -36,7 +36,7 @@ namespace ReservasHotel.Server.Controllers
         {
             DateTime fechaLimite = fecha.AddDays(cantidad);
 
-            var diasReservados = context.Reservaciones.Where(
+            var diasReservados = dbcontext.Reservaciones.Where(
                 d => d.Fecha >= fecha && d.Fecha <= fechaLimite)
                 .ToListAsync();
 
@@ -49,36 +49,73 @@ namespace ReservasHotel.Server.Controllers
 
         #region post
 
-        [HttpPost] 
-        public async Task<ActionResult<Reservacion>> GuardarDia(Reservacion reservaciones)
+        [HttpPost("/agregarReservaciones")]
+        public async Task<ActionResult<List<Reservacion>>> GuardarDia(List<Reservacion> AgregarReservaciones)
         {
-            var ocupado = context.Reservaciones.Where(x => x == reservaciones);
 
-            if (!ocupado.Contains(reservaciones))
+            foreach (var item in AgregarReservaciones) //valida que no exista una uq dentro de la reserva
             {
-                try
+                var ocupado = dbcontext.Reservaciones.Where(x => x == item);
+                if (ocupado.Contains(item))
                 {
-                    context.Reservaciones.Add(reservaciones);
-                    await context.SaveChangesAsync();
+                    var salida = dbcontext.Habitaciones.Where(h => h.Id == item.HabitacionId).Select(x => x.N_DeHabitacion).FirstOrDefault();
 
-                    return reservaciones;
-
-                }
-                catch (Exception)
-                {
-
-                    return BadRequest("No se completo la carga del nuevo usuario");
+                    return BadRequest($"La habitacion N° {salida} en la fecha fecha {item.Fecha} no esta disponible");
                 }
             }
-            else
+
+            try
             {
-                return BadRequest($"La habitacion se encuentra ocupada en la fecha " +
-                    $"{reservaciones.Fecha.Day}/{reservaciones.Fecha.Month}/{reservaciones.Fecha.Year}.");
+                foreach (var item in AgregarReservaciones)
+                {
+                    dbcontext.Reservaciones.Add(item);
+                }
+                var resp = await dbcontext.SaveChangesAsync();
+
+                return AgregarReservaciones.ToList();
             }
-            
+            catch (Exception)
+            {
+                return BadRequest("No se completo el guardado ");
+
+            }
+
         }
         #endregion
 
+        [HttpDelete]
+        public async Task<ActionResult> ElimDia(Reserva reserva, DateTime dia, int NumHab)
+        {
+            try
+            {
+                var idHab = await dbcontext.Habitaciones.Where( h => h.N_DeHabitacion == NumHab).Select( x => x.Id).FirstOrDefaultAsync();
 
+                if (idHab == 0)
+                {
+                    return BadRequest("La habitacion no es correcta");
+                }
+
+                var reservacion = await dbcontext.Reservaciones
+                    .Where(d => d.Fecha == dia && d.HabitacionId == idHab)
+                    .FirstOrDefaultAsync();
+
+                if (reservacion != null)
+                {
+                    dbcontext.Reservaciones.Remove(reservacion);
+                    await dbcontext.SaveChangesAsync();
+
+                    return Ok("Se elimino correctamente");
+                }
+                else
+                {
+                    return NotFound("no existe una reservacion en esta fecha y habitacion");
+                }
+            }
+            catch (Exception)
+            {
+
+                return BadRequest("No se pudo eliminar");
+            }
+        } 
     }
 }

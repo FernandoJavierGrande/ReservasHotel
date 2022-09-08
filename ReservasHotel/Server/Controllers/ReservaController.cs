@@ -83,44 +83,43 @@ namespace ReservasHotel.Server.Controllers
             }
             catch (Exception e)
             {
-
                 return BadRequest("No pudo agendar la reserva, vuelva a intentarlo " + e);
             }
 
         }
 
-        [HttpPost("/agregarHabitaciones")]
-        public async Task<ActionResult<List<Reservacion>>> GuardarDia(List<Reservacion> AgregarHabitaciones)
-        {
-           
-            foreach (var item in AgregarHabitaciones) //valida que no exista una uq dentro de la reserva
-            {
-                var ocupado = dbcontext.Reservaciones.Where(x => x == item);
-                if (ocupado.Contains(item))
-                {
-                    var salida = dbcontext.Habitaciones.Where(h => h.Id == item.HabitacionId).Select(x => x.N_DeHabitacion).FirstOrDefault();
+        
 
-                    return BadRequest($"La habitacion N° {salida} en la fecha fecha {item.Fecha} no esta disponible");
-                }
-            }
+        [HttpDelete]
+        public async Task<ActionResult> EliminarRva(Reserva reserva)
+        {
 
             try
             {
-                foreach (var item in AgregarHabitaciones)
-                {
-                    dbcontext.Reservaciones.Add(item);
-                    
-                }
-                var resp = await dbcontext.SaveChangesAsync();
+                var ExisteReserva = await dbcontext.Reservas.AnyAsync(r => r.Id == reserva.Id);
+                //var reservaciones = await dbcontext.Reservaciones.AnyAsync( x => x.ReservaId == reserva.Id);
                 
-                return AgregarHabitaciones.ToList();
+
+                if (ExisteReserva)
+                {
+                    dbcontext.Reservas.Remove(reserva);
+
+                    await dbcontext.SaveChangesAsync();
+                    return Ok("Se elimino exitosamente");
+                }
+                else
+                {
+                    return NotFound("La reserva no existe");
+                }
+                
             }
             catch (Exception)
             {
-                return BadRequest("No se completo el guardado " );
-                
+
+                return BadRequest("no se pudo eliminar");
             }
 
         }
+
     }
 }
