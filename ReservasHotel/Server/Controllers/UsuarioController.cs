@@ -28,14 +28,13 @@ namespace ReservasHotel.Server.Controllers
             try
             {
                 context.Usuarios.Add(user);
-                
+
                 await context.SaveChangesAsync();
 
                 return user;
             }
             catch (Exception)
             {
-
                 return BadRequest("No se completo la carga del nuevo usuario");
             }
 
@@ -49,7 +48,7 @@ namespace ReservasHotel.Server.Controllers
         {
             try
             {
-                var User = context.Usuarios      
+                var User = context.Usuarios
                     .Where(x => x.NombreUsuario == usuario && x.pass == clave)
                     .FirstOrDefault();
 
@@ -64,7 +63,7 @@ namespace ReservasHotel.Server.Controllers
                     new Claim("Leg", User.Legajo.ToString()),
                 };
 
-                
+
 
                 foreach (var item in claims)    //prueba
                     Console.WriteLine($"+++++++{item.Type} = {item.Value}");
@@ -81,8 +80,11 @@ namespace ReservasHotel.Server.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest("El usuario o contraseña no son correctos " + e );
+                return BadRequest("El usuario o contraseña no son correctos " + e);
             }
         }
+
+
+       
     }
 }

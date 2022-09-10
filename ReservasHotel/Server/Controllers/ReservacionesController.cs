@@ -8,7 +8,7 @@ namespace ReservasHotel.Server.Controllers
 {
     [ApiController]
     [Route("api/Fechas")]
-    public class ReservacionesController :ControllerBase
+    public class ReservacionesController : ControllerBase
     {
         private readonly Context dbcontext;
 
@@ -22,13 +22,13 @@ namespace ReservasHotel.Server.Controllers
 
         #region Gets
 
-        
+
 
         [HttpGet]
         public async Task<ActionResult<List<Reservacion>>> Get()
         {
 
-            return await dbcontext.Reservaciones.ToListAsync(); 
+            return await dbcontext.Reservaciones.ToListAsync();
         }
 
         [HttpGet("/DiasReservados")]
@@ -83,7 +83,10 @@ namespace ReservasHotel.Server.Controllers
         }
         #endregion
 
-        [HttpDelete]
+
+        #region Del
+        
+        [HttpDelete]   // elimina una reservacion
         public async Task<ActionResult> ElimDia(Reserva reserva, DateTime dia, int NumHab)
         {
             try
@@ -116,6 +119,107 @@ namespace ReservasHotel.Server.Controllers
 
                 return BadRequest("No se pudo eliminar");
             }
-        } 
+        }
+
+        #endregion
+
+
+        #region Update
+        /* recibe una reserva, la reservacion a eliminar[0] y la reservacion a agregar[1] (en un mismo dato) modifica la fecha de la reservacion si está disponible 
+           cambia la fecha de la reserva de ing o de salida +1 */
+        [HttpPut]
+        public async Task<ActionResult> Update(Reserva reserva) // si se tiene que cambiar el registro entero
+        {
+
+            Console.WriteLine($"Reservacion[0] elim = {reserva.Reservaciones[0]} reservacion[2] add = {reserva.Reservaciones[1]}");
+
+            if (reserva.Reservaciones[0] == null || reserva.Reservaciones[1] == null)
+                return BadRequest("Error intente nuevamente");
+
+
+            // busca si esta disponible la hab en la fecha determinada(uq) 
+            var disponible = await dbcontext.Reservaciones.AnyAsync(r => r == reserva.Reservaciones[1]); 
+
+            if (disponible)
+                return BadRequest("La fecha no esta disponible");
+
+            reserva = ModFechasReserva(reserva);
+
+            try
+            {
+                dbcontext.Reservaciones.Add(reserva.Reservaciones[1]);
+
+                dbcontext.Reservaciones.Remove(reserva.Reservaciones[0]); // se elimina la "modificada"
+
+                dbcontext.Reservas.Update(reserva);
+
+                await dbcontext.SaveChangesAsync();
+
+                return Ok("Se guardo correctamente");
+
+            }
+            catch (Exception e)
+            {
+
+                return BadRequest("error " + e);
+            }
+        }
+
+
+        [HttpPut("ModificarHuespedes")] // cambiar para modificar solo uno?
+        public async Task<ActionResult> Put(Reservacion reservacion)
+        {
+            var res = await dbcontext.Reservaciones
+                .Where(r => r.HabitacionId == reservacion.HabitacionId && r.ReservaId == reservacion.ReservaId)
+                .ToListAsync();
+
+            try
+            {
+                foreach (var item in res)
+                {
+                    item.Cant_Huespedes = reservacion.Cant_Huespedes;
+
+                    dbcontext.Reservaciones.Update(item);
+                }
+
+                await dbcontext.SaveChangesAsync();
+                return Ok();
+            }
+            catch (Exception)
+            {
+
+                return BadRequest("No se actualizo correctamente");
+            }
+        }
+
+        #endregion
+
+
+        #region Metodos 
+        private Reserva ModFechasReserva( Reserva reserva)
+        {
+            if (reserva.F_inicio > reserva.Reservaciones[1].Fecha ) // si la fecha nueva es menor a la f inicio orig se pone en inicio
+            {
+                if (reserva.Reservaciones[0].Fecha == reserva.F_fin) // en este caso se estaria "corriendo" para atras una fecha 
+                {
+                    reserva.F_fin = reserva.F_fin.AddDays(-1);
+                }
+                reserva.F_inicio = reserva.Reservaciones[1].Fecha;
+            }
+            else if (reserva.F_fin < reserva.Reservaciones[1].Fecha)// si la fecha nueva es mayor al final de la orig se extiende 
+            {
+                if (reserva.Reservaciones[0].Fecha == reserva.F_inicio) // aca se "adelanta" un dia eliminando el primero
+                {
+                    reserva.F_inicio = reserva.F_inicio.AddDays(1);
+                }
+                reserva.F_fin = reserva.Reservaciones[1].Fecha;
+            }
+
+            return reserva;
+        }
+
+
+        #endregion
+
     }
 }

@@ -13,7 +13,6 @@ namespace ReservasHotel.Server.Controllers
     {
         private readonly Context dbcontext;
 
-
         #region ctor
         public ReservaController(Context dbcontext)
         {
@@ -50,29 +49,19 @@ namespace ReservasHotel.Server.Controllers
             int canDeDias = (reserva.F_fin - reserva.F_inicio).Days + 1;
             int cantDeHab = reserva.HabitacionesEnLaReserva.Count();
 
-            Console.WriteLine($" dias: {canDeDias}, cant hab {cantDeHab} ");
-
             try
             {
                 for (int j = 0; j < cantDeHab; j++)
                 {
-                    Console.WriteLine($" j = {j} valor de hab[j] = {reserva.HabitacionesEnLaReserva[j]} ");
-
                     for (int i = 0; i < canDeDias; i++)
                     {
                         reservacion = new Reservacion();
 
-                        reservacion.HabitacionId = reserva.HabitacionesEnLaReserva[j];
-
                         reservacion.Fecha = reserva.F_inicio.AddDays(i);
-
-                        Console.WriteLine($"fecha {reserva.F_inicio.AddDays(i)} , res.fech {reservacion.Fecha}");
 
                         reservacion.Cant_Huespedes = reserva.PaxPorHabitacion[j];
 
                         reserva.Reservaciones.Add(reservacion);
-
-                        Console.WriteLine($" i= {i} ");
                     }
                 }
                 dbcontext.Reservas.Add(reserva);
@@ -85,20 +74,17 @@ namespace ReservasHotel.Server.Controllers
             {
                 return BadRequest("No pudo agendar la reserva, vuelva a intentarlo " + e);
             }
-
         }
 
-        
+
+        #region Delete
 
         [HttpDelete]
         public async Task<ActionResult> EliminarRva(Reserva reserva)
         {
-
             try
             {
                 var ExisteReserva = await dbcontext.Reservas.AnyAsync(r => r.Id == reserva.Id);
-                //var reservaciones = await dbcontext.Reservaciones.AnyAsync( x => x.ReservaId == reserva.Id);
-                
 
                 if (ExisteReserva)
                 {
@@ -110,16 +96,18 @@ namespace ReservasHotel.Server.Controllers
                 else
                 {
                     return NotFound("La reserva no existe");
-                }
-                
+                }   
             }
             catch (Exception)
             {
-
                 return BadRequest("no se pudo eliminar");
             }
 
         }
+        #endregion
 
+        #region update
+
+        #endregion
     }
 }
