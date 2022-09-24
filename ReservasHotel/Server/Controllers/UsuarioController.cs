@@ -83,8 +83,5 @@ namespace ReservasHotel.Server.Controllers
                 return BadRequest("El usuario o contraseña no son correctos " + e);
             }
         }
-
-
-       
     }
 }

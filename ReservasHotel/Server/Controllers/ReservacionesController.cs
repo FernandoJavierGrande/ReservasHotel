@@ -25,10 +25,38 @@ namespace ReservasHotel.Server.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult<List<Reservacion>>> Get()
+        public async Task<ActionResult<List<Reservacion>>> Get()//necesito que retorne una lista de dias ocupados y no
         {
+            int N_hab = 101;
+            int DIAS = 7;
+            DateTime fecha = DateTime.Today.Date;
+            var idHab = await dbcontext.Habitaciones.Where( h => h.N_DeHabitacion == N_hab).Select(x=>x.Id).FirstOrDefaultAsync();
 
-            return await dbcontext.Reservaciones.ToListAsync();
+            if (idHab == 0)
+                return NotFound("Habitacion incorrecta");
+
+            List<Reservacion> reservaciones = new List<Reservacion>();
+
+            for (int i = 0; i < DIAS; i++)
+            {
+
+                bool disp = await dbcontext.Reservaciones.AnyAsync(r => r.Fecha == fecha.AddDays(i) && r.HabitacionId == idHab);
+
+                if (disp)
+                {
+                    reservaciones.Add (await dbcontext.Reservaciones
+                                .Where(r => r.HabitacionId == idHab && r.Fecha == fecha.AddDays(i)).FirstAsync());
+                }
+                else
+                {
+                    reservaciones.Add(new Reservacion());
+                    reservaciones[i].Fecha= fecha.AddDays(i);
+                    
+                }
+
+            }
+
+            return reservaciones;
         }
 
         [HttpGet("/DiasReservados")]

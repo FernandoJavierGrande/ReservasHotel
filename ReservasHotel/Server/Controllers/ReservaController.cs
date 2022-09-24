@@ -57,6 +57,8 @@ namespace ReservasHotel.Server.Controllers
                     {
                         reservacion = new Reservacion();
 
+                        reservacion.HabitacionId = reserva.HabitacionesEnLaReserva[j];
+
                         reservacion.Fecha = reserva.F_inicio.AddDays(i);
 
                         reservacion.Cant_Huespedes = reserva.PaxPorHabitacion[j];

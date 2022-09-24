@@ -1,0 +1,58 @@
+﻿@page "/Afiliados"
+@inject IHttpService http
+
+<h3>Lista de Afiliados</h3>
+
+<table class="table table-hover table-light table-sm">
+    <thead>
+        <tr>
+            <th scope="col">Cuil</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Apellido</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (afiliados == null)
+        {
+            <tr>Cargando</tr>
+        }
+        else if (afiliados.Count == 0)
+        {
+            <tr>No hay datos disponibles</tr>
+        }
+        else
+        {
+            @foreach (var item in afiliados)
+            {
+                <tr>
+                    <td>@item.Cuil</td>
+                    <td>@item.Nombre</td>
+                 <td>@item.Apellido</td>
+                </tr>
+            }
+        }
+    </tbody>
+    
+    </table>
+
+
+@code {
+    List<Afiliado> afiliados = new List<Afiliado>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        base.OnInitializedAsync();
+
+        await readAfiliados();
+
+    }
+    private async Task readAfiliados()
+    {
+        var respuesta = await http.Get<List<Afiliado>>("api/Afiliados");
+        if (!respuesta.Error)
+        {
+            afiliados = respuesta.Respuesta;
+        }
+    }
+
+}
