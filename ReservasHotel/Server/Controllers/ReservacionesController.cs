@@ -25,38 +25,44 @@ namespace ReservasHotel.Server.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult<List<Reservacion>>> Get()//necesito que retorne una lista de dias ocupados y no
+        public async Task<ActionResult<List<List<Reservacion>>>> Get()
+            //necesito que retorne una lista de dias ocupados y no
         {
-            int N_hab = 101;
+             
             int DIAS = 7;
             DateTime fecha = DateTime.Today.Date;
-            var idHab = await dbcontext.Habitaciones.Where( h => h.N_DeHabitacion == N_hab).Select(x=>x.Id).FirstOrDefaultAsync();
 
-            if (idHab == 0)
-                return NotFound("Habitacion incorrecta");
+            var habitaciones = await dbcontext.Habitaciones.ToListAsync();
 
             List<Reservacion> reservaciones = new List<Reservacion>();
+            List<List<Reservacion>> listaDeListas = new List<List<Reservacion>>();
 
-            for (int i = 0; i < DIAS; i++)
+            
+
+            foreach (var habitacion in habitaciones)
             {
-
-                bool disp = await dbcontext.Reservaciones.AnyAsync(r => r.Fecha == fecha.AddDays(i) && r.HabitacionId == idHab);
-
-                if (disp)
+                reservaciones = new List<Reservacion>();
+                
+                for (int i = 0; i < DIAS; i++)
                 {
-                    reservaciones.Add (await dbcontext.Reservaciones
-                                .Where(r => r.HabitacionId == idHab && r.Fecha == fecha.AddDays(i)).FirstAsync());
-                }
-                else
-                {
-                    reservaciones.Add(new Reservacion());
-                    reservaciones[i].Fecha= fecha.AddDays(i);
-                    
-                }
+                    bool disp = await dbcontext.Reservaciones
+                        .AnyAsync(r => r.Fecha == fecha.AddDays(i) && r.HabitacionId == habitacion.Id);
 
+                    if (disp)
+                    {
+                        reservaciones.Add(await dbcontext.Reservaciones
+                                    .Where(r => r.HabitacionId == habitacion.Id && r.Fecha == fecha.AddDays(i)).FirstAsync());
+                    }
+                    else
+                    {
+                        reservaciones.Add(new Reservacion());
+                        reservaciones[i].Fecha = fecha.AddDays(i);
+                    }  
+                }
+                listaDeListas.Add(reservaciones);
             }
 
-            return reservaciones;
+            return listaDeListas;
         }
 
         [HttpGet("/DiasReservados")]

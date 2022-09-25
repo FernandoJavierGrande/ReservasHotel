@@ -6,20 +6,41 @@
 
 <br />
 
-<table class="table table-hover table-light">
+<table class="table table-light">
     <thead>
         <tr>
-            @foreach (var item in reservaciones)
+            <th> </th>
+            @foreach (var item in reservaciones[0] )
            {
                <th>@item.Fecha.ToShortDateString()</th>
            }
         </tr>
     </thead>
+    <tbody>
+        @foreach (var lista in reservaciones)
+       {
+        <tr>
+            <th>@lista[0].HabitacionId</th>
+            @foreach (var item in lista)
+           {
+               @if (item.ReservaId==0)
+               {
+                    <td style= "background-color:lightgreen">@item.ReservaId</td>
+                }
+                else
+                {
+                    <td style= "background-color:orangered">@item.ReservaId</td>
+                }
+
+            }
+        </tr>
+       }
+    </tbody>
 </table>
 
 
 @code {
-    List<Reservacion> reservaciones = new List<Reservacion>();
+    List<List<Reservacion>> reservaciones = new List<List<Reservacion>>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -30,7 +51,7 @@
 
     private async Task disponibilidad()
     {
-        var respuesta = await http.Get<List<Reservacion>>("api/Fechas");
+        var respuesta = await http.Get<List<List<Reservacion>>>("api/Fechas");
         if (!respuesta.Error)
         {
             reservaciones = respuesta.Respuesta;
