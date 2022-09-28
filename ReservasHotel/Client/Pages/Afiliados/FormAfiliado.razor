@@ -1,0 +1,36 @@
+﻿<EditForm Model="afiliado" OnValidSubmit = "onValidSubmit">
+    <DataAnnotationsValidator/>
+    <div class="form-control">
+         <label>Cuil</label>
+         <div>
+             <InputText class="form-control" @bind-Value=@afiliado.Cuil/>
+             <ValidationMessage For="@(() => afiliado.Cuil)"/>
+         </div>
+    </div>
+    <div class="form-control">
+        <label>Nombre</label>
+        <div>
+             <InputText class="form-control" @bind-Value=@afiliado.Nombre/>
+             <ValidationMessage For="@(() => afiliado.Nombre)"/>
+         </div>
+    </div>  
+    <div class="form-control">
+        <label>Apellido</label>
+        <div>
+             <InputText class="form-control" @bind-Value=@afiliado.Apellido/>
+             <ValidationMessage For="@(() => afiliado.Apellido)"/>
+         </div>
+    </div>
+    <br />
+    <button class ="btn btn-primary" type="submit">Aceptar</button>
+
+    <button class ="btn btn-secondary" @onclick = "onCancel">Cancel</button>
+</EditForm>
+
+@code {
+    [Parameter]public Afiliado afiliado { get; set; }
+    [Parameter]public EventCallback onValidSubmit { get; set; }
+    [Parameter]public EventCallback onCancel { get; set; }   
+    
+    
+}

@@ -6,13 +6,17 @@
 
 <br />
 
-<table class="table table-light">
-    <thead>
+<table class="table table-bordered">
+    <thead style="background-color:#D8E7F8">
         <tr>
-            <th> </th>
-            @foreach (var item in reservaciones[0] )
+            <th>Num Hab </th>
+           @foreach(var lista in reservaciones)
            {
-               <th>@item.Fecha.ToShortDateString()</th>
+              @foreach (var dias in lista)
+              {
+                  <th>@dias.Fecha.ToShortDateString()</th>
+              } 
+              break;
            }
         </tr>
     </thead>
@@ -20,18 +24,17 @@
         @foreach (var lista in reservaciones)
        {
         <tr>
-            <th>@lista[0].HabitacionId</th>
-            @foreach (var item in lista)
+           <th>@lista[0].HabitacionId</th>
+           @foreach (var item in lista)
            {
                @if (item.ReservaId==0)
                {
-                    <td style= "background-color:lightgreen">@item.ReservaId</td>
-                }
-                else
-                {
-                    <td style= "background-color:orangered">@item.ReservaId</td>
-                }
-
+                    <td style= "background-color:#A0F981">Libre</td>
+               }
+               else
+               {
+                   <td style= "background-color:#FD5050">@item.ReservaId</td>
+               }
             }
         </tr>
        }
@@ -44,7 +47,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        base.OnInitializedAsync();
+        await base.OnInitializedAsync();
 
         await disponibilidad();
     }
@@ -55,6 +58,8 @@
         if (!respuesta.Error)
         {
             reservaciones = respuesta.Respuesta;
+            Console.WriteLine($"res desde calendario {reservaciones.Count}");
+            Console.WriteLine($"dias desde calendario {reservaciones[0].Count}");
         }
     }
 }

@@ -1,0 +1,63 @@
+﻿@page "/Habitaciones"
+@inject IHttpService http
+
+<h3>Lista de habitaciones</h3>
+
+<div>
+    <a class = "btn btn-primary" href="Habitaciones/Crear"> Agregar habitación</a>
+</div>
+
+<br />
+
+<table class="table table-hover table-light">
+    <thead>
+        <tr>
+            <th scope="col">N° Habitacion </th>
+            <th scope="col">Tipo</th>
+            <th scope="col">Observaciones </th>
+        </tr>
+    </thead>
+    <tbody>
+       @if (habitaciones == null)
+        {
+            <tr>Cargando</tr>
+        }
+        else if (habitaciones.Count == 0)
+        {
+            <tr>No hay datos disponibles</tr>
+        }
+        else
+        {
+            @foreach (var item in habitaciones)
+            {
+                <tr>
+                    <td>@item.NHab</td>
+                    <td>@item.Tipo</td>
+                 <td>@item.Obs</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@code {
+    List<Habitacion> habitaciones = new List<Habitacion>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        await readHabitaciones();
+
+    }
+
+    private async Task readHabitaciones()
+    {
+         var respuesta = await http.Get<List<Habitacion>>("api/Habitacion");
+        if (!respuesta.Error)
+        {
+            habitaciones = respuesta.Respuesta; 
+        }
+    }
+
+}

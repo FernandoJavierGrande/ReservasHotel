@@ -11,6 +11,6 @@ namespace ReservasHotel.DB.Data.Entidades
     {
         public int Id { get; set; }
         [Required]
-        public DateTime? FechaCreacion { get; set; }
+        public DateTime FechaCreacion { get; set; }
     }
 }

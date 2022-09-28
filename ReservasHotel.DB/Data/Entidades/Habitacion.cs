@@ -1,17 +1,21 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace ReservasHotel.DB.Data.Entidades
 {
-    public class Habitacion: BaseEntidad
+    [Index(nameof(NHab), Name = "nHab_Uq", IsUnique = true)]
+    public class Habitacion
     {
-       
         [Required]
-        public int N_DeHabitacion { get; set; }
+        [Key]
+        [RegularExpression("(^[0-9]+$)", ErrorMessage = "Solo se permiten números")]
+        public string NHab { get; set; }
         [Required]
         public string Tipo { get; set; }
         public string Obs { get; set; }

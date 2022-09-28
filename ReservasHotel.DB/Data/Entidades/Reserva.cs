@@ -29,7 +29,7 @@ namespace ReservasHotel.DB.Data.Entidades
         public List<Reservacion> Reservaciones { get; set; }
 
         [NotMapped]
-        public List<int> HabitacionesEnLaReserva{ get; set; } //sirven para construir una reserva con reservaciones
+        public List<string> HabitacionesEnLaReserva{ get; set; } //sirven para construir una reserva con reservaciones
                                                               //multiples de forma automatica
         [NotMapped]
         public List<int> PaxPorHabitacion { get; set; }

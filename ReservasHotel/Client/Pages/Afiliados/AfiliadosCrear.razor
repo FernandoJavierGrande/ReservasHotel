@@ -1,0 +1,27 @@
+﻿@page "/Afiliados/Cargar"
+@inject IHttpService http
+@inject NavigationManager navigationManager
+
+<h3>Cargar nuevo Afiliado</h3>
+
+<FormAfiliado afiliado= "afiliado" onCancel="cancelar" onValidSubmit="grabar">
+
+</FormAfiliado>
+
+@code {
+    private Afiliado afiliado = new Afiliado();
+
+    private async void grabar()
+    {
+        var httpRespuesta = await http.Post<Afiliado>("api/Afiliados", afiliado);
+        if (httpRespuesta.Error)
+        {
+            var body = httpRespuesta.HttpResponseMessage;
+        }
+        navigationManager.NavigateTo("/Afiliados");
+    }
+    private void cancelar()
+    {
+        
+    }
+}

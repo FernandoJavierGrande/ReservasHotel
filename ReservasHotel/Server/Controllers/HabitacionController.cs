@@ -26,10 +26,10 @@ namespace ReservasHotel.Server.Controllers
 
 
         [HttpGet("{NumHabitacion:int}")]
-        public async Task<ActionResult<string>> Get(int NumHabitacion)
+        public async Task<ActionResult<string>> Get(string NumHabitacion)
         {
             var habitacion = await dbcontext.Habitaciones.Where(
-                e => e.N_DeHabitacion == NumHabitacion).FirstOrDefaultAsync();
+                e => e.NHab == NumHabitacion).FirstOrDefaultAsync();
             if (habitacion==null)
             {
                 return NotFound($"La habitacion {NumHabitacion} no existe");
@@ -40,25 +40,20 @@ namespace ReservasHotel.Server.Controllers
             }
         }
 
-        [HttpGet("TipoDeHabitacion")]
-        public ActionResult<List<int>> GetCode(string tipo)
-        {
-            var numeros = dbcontext.Habitaciones.Where(x => x.Tipo == tipo).Select(a => a.N_DeHabitacion).ToList();
+        //[HttpGet("TipoDeHabitacion")]    //devuelve los tipos de hab con sus numeros
+        //public ActionResult<List<string>> GetCode(string tipo)
+        //{
+        //    var numeros = dbcontext.Habitaciones.Where(x => x.Tipo == tipo).Select(a => a.N_DeHabitacion).ToList();
 
-            if (numeros.Count == 0)
-            {
-                return NotFound($"La habitacion {tipo} no fue encontrada");
-            }
+        //    if (numeros.Count == 0)
+        //    {
+        //        return NotFound($"La habitacion {tipo} no fue encontrada");
+        //    }
 
-            return numeros;
+        //    return numeros;
 
-        }
-
-
-
+        //}
         #endregion
-
-
 
         #region post
         [HttpPost]
@@ -71,9 +66,9 @@ namespace ReservasHotel.Server.Controllers
                 await dbcontext.SaveChangesAsync();
                 return Habitacion;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest("No se completo el agregado de una nueva habitacion ");
+                return BadRequest("No se completo el agregado de una nueva habitacion " + e);
             }
         }
         #endregion

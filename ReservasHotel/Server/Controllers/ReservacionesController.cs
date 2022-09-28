@@ -37,31 +37,35 @@ namespace ReservasHotel.Server.Controllers
             List<Reservacion> reservaciones = new List<Reservacion>();
             List<List<Reservacion>> listaDeListas = new List<List<Reservacion>>();
 
-            
-
             foreach (var habitacion in habitaciones)
             {
                 reservaciones = new List<Reservacion>();
                 
-                for (int i = 0; i < DIAS; i++)
+                for (int i = 0; i < 7; i++)
                 {
                     bool disp = await dbcontext.Reservaciones
-                        .AnyAsync(r => r.Fecha == fecha.AddDays(i) && r.HabitacionId == habitacion.Id);
+                        .AnyAsync(r => r.Fecha == fecha.AddDays(i) && r.HabitacionId == habitacion.NHab);
 
                     if (disp)
                     {
-                        reservaciones.Add(await dbcontext.Reservaciones
-                                    .Where(r => r.HabitacionId == habitacion.Id && r.Fecha == fecha.AddDays(i)).FirstAsync());
+                        Reservacion res;
+                        res = await dbcontext.Reservaciones
+                                    .Where(r => r.HabitacionId == habitacion.NHab && r.Fecha == fecha.AddDays(i))
+                                    .FirstAsync();
+                        
+                        reservaciones.Add(res);
                     }
                     else
                     {
                         reservaciones.Add(new Reservacion());
                         reservaciones[i].Fecha = fecha.AddDays(i);
+                        reservaciones[i].HabitacionId = habitacion.NHab;
                     }  
                 }
                 listaDeListas.Add(reservaciones);
             }
-
+            Console.WriteLine($"listade listas  {listaDeListas.Count}");
+            Console.WriteLine($"cantidad de dias {listaDeListas[0].Count}");
             return listaDeListas;
         }
 
@@ -92,7 +96,8 @@ namespace ReservasHotel.Server.Controllers
                 var ocupado = dbcontext.Reservaciones.Where(x => x == item);
                 if (ocupado.Contains(item))
                 {
-                    var salida = dbcontext.Habitaciones.Where(h => h.Id == item.HabitacionId).Select(x => x.N_DeHabitacion).FirstOrDefault();
+                    var salida = dbcontext.Habitaciones.Where(h => h.NHab
+                    == item.HabitacionId).Select(x => x.NHab).FirstOrDefault();
 
                     return BadRequest($"La habitacion N° {salida} en la fecha fecha {item.Fecha} no esta disponible");
                 }
@@ -121,13 +126,14 @@ namespace ReservasHotel.Server.Controllers
         #region Del
         
         [HttpDelete]   // elimina una reservacion
-        public async Task<ActionResult> ElimDia(Reserva reserva, DateTime dia, int NumHab)
+        public async Task<ActionResult> ElimDia(Reserva reserva, DateTime dia, string NumHab)
         {
             try
             {
-                var idHab = await dbcontext.Habitaciones.Where( h => h.N_DeHabitacion == NumHab).Select( x => x.Id).FirstOrDefaultAsync();
+                var idHab = await dbcontext.Habitaciones
+                    .Where( h => h.NHab == NumHab).Select( x => x.NHab).FirstOrDefaultAsync();
 
-                if (idHab == 0)
+                if (idHab == null)
                 {
                     return BadRequest("La habitacion no es correcta");
                 }

@@ -1,0 +1,34 @@
+﻿<EditForm Model="habitacion" OnValidSubmit="onValidSubmit">
+    <DataAnnotationsValidator/>
+    <div class="form-control">
+        <label>Numero de habitación</label>
+        <div>
+            <InputText class="form-control" @bind-Value=@habitacion.NHab></InputText>
+            <ValidationMessage For="@(()=>habitacion.NHab)"/>
+        </div>
+    </div>
+    <div class="form-control">
+        <label>Tipo</label>
+        <div>
+            <InputText class="form-control" @bind-Value=@habitacion.Tipo></InputText>
+            <ValidationMessage For="@(()=>habitacion.Tipo)"/>
+        </div>
+    </div>
+    <div class="form-control">
+        <label>Observaciones</label>
+        <div>
+            <InputText class="form-control" @bind-Value=@habitacion.Obs></InputText>
+            <ValidationMessage For="@(()=>habitacion.Obs)"/>
+        </div>
+    </div>
+
+    <br/>
+    <button class="btn btn-primary" type="submit">AGREGAR</button>
+    <button class ="btn btn-secondary" @onclick = "onCancel">Cancelar</button>
+</EditForm>
+
+@code {
+    [Parameter]public Habitacion habitacion { get; set; }
+    [Parameter]public EventCallback onValidSubmit { get; set; }
+    [Parameter]public EventCallback onCancel { get; set; }
+}

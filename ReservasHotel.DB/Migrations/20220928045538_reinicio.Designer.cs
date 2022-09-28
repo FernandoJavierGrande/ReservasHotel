@@ -12,8 +12,8 @@ using ReservasHotel.DB.Data;
 namespace ReservasHotel.DB.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20220731231739_inicioBD")]
-    partial class inicioBD
+    [Migration("20220928045538_reinicio")]
+    partial class reinicio
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -42,8 +42,7 @@ namespace ReservasHotel.DB.Migrations
                         .HasMaxLength(11)
                         .HasColumnType("nvarchar(11)");
 
-                    b.Property<DateTime?>("FechaCreacion")
-                        .IsRequired()
+                    b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Nombre")
@@ -59,41 +58,10 @@ namespace ReservasHotel.DB.Migrations
                     b.ToTable("Afiliados");
                 });
 
-            modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.EstadoPago", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Estado")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("FechaCreacion")
-                        .IsRequired()
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("EstadosDePago");
-                });
-
             modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Habitacion", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime?>("FechaCreacion")
-                        .IsRequired()
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("N_DeHabitacion")
-                        .HasColumnType("int");
+                    b.Property<string>("NHab")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Obs")
                         .HasColumnType("nvarchar(max)");
@@ -102,30 +70,12 @@ namespace ReservasHotel.DB.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("NHab");
+
+                    b.HasIndex(new[] { "NHab" }, "nHab_Uq")
+                        .IsUnique();
 
                     b.ToTable("Habitaciones");
-                });
-
-            modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Privilegio", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime?>("FechaCreacion")
-                        .IsRequired()
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Permiso")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Privilegios");
                 });
 
             modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Reserva", b =>
@@ -142,8 +92,9 @@ namespace ReservasHotel.DB.Migrations
                     b.Property<bool>("Estado")
                         .HasColumnType("bit");
 
-                    b.Property<int>("EstadoPagoId")
-                        .HasColumnType("int");
+                    b.Property<string>("EstadoPago")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("F_fin")
                         .HasColumnType("datetime2");
@@ -151,8 +102,7 @@ namespace ReservasHotel.DB.Migrations
                     b.Property<DateTime>("F_inicio")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("FechaCreacion")
-                        .IsRequired()
+                    b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Obs")
@@ -165,36 +115,21 @@ namespace ReservasHotel.DB.Migrations
 
                     b.HasIndex("AfiliadoId");
 
-                    b.HasIndex("EstadoPagoId");
-
                     b.HasIndex("UsuarioId");
 
                     b.ToTable("Reservas");
                 });
 
-            modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Reservaciones", b =>
+            modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Reservacion", b =>
                 {
-                    b.Property<int>("HabitacionId")
-                        .HasColumnType("int");
+                    b.Property<string>("HabitacionId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("Fecha")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("Cant_Huespedes")
+                    b.Property<int>("Cant_Huespedes")
                         .HasColumnType("int");
-
-                    b.Property<string>("CheckInOut")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("FechaCreacion")
-                        .IsRequired()
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Obs")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ReservaId")
                         .HasColumnType("int");
@@ -217,8 +152,7 @@ namespace ReservasHotel.DB.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<DateTime?>("FechaCreacion")
-                        .IsRequired()
+                    b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("Legajo")
@@ -229,16 +163,15 @@ namespace ReservasHotel.DB.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
-                    b.Property<int>("PrivilegioId")
-                        .HasColumnType("int");
+                    b.Property<string>("Privilegio")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("pass")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PrivilegioId");
 
                     b.HasIndex(new[] { "NombreUsuario" }, "NUsuario_Uq")
                         .IsUnique();
@@ -254,12 +187,6 @@ namespace ReservasHotel.DB.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ReservasHotel.DB.Data.Entidades.EstadoPago", null)
-                        .WithMany("Reservas")
-                        .HasForeignKey("EstadoPagoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("ReservasHotel.DB.Data.Entidades.Usuario", null)
                         .WithMany("Reservas")
                         .HasForeignKey("UsuarioId")
@@ -267,7 +194,7 @@ namespace ReservasHotel.DB.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Reservaciones", b =>
+            modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Reservacion", b =>
                 {
                     b.HasOne("ReservasHotel.DB.Data.Entidades.Habitacion", null)
                         .WithMany("Reservaciones")
@@ -282,33 +209,14 @@ namespace ReservasHotel.DB.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Usuario", b =>
-                {
-                    b.HasOne("ReservasHotel.DB.Data.Entidades.Privilegio", null)
-                        .WithMany("usuarios")
-                        .HasForeignKey("PrivilegioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Afiliado", b =>
                 {
                     b.Navigation("Rva");
                 });
 
-            modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.EstadoPago", b =>
-                {
-                    b.Navigation("Reservas");
-                });
-
             modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Habitacion", b =>
                 {
                     b.Navigation("Reservaciones");
-                });
-
-            modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Privilegio", b =>
-                {
-                    b.Navigation("usuarios");
                 });
 
             modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Reserva", b =>

@@ -20,7 +20,7 @@ namespace ReservasHotel.DB.Data.Entidades
     {
         
         [Required]
-        public int HabitacionId { get; set; }
+        public string HabitacionId { get; set; }
         [Required]
         
         public int ReservaId { get; set; }
@@ -29,7 +29,7 @@ namespace ReservasHotel.DB.Data.Entidades
         [DataType(DataType.Date)]  
         public DateTime Fecha { get; set; }
         
-        public int? Cant_Huespedes { get; set; }
+        public int Cant_Huespedes { get; set; }
 
 
         

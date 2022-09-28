@@ -14,7 +14,7 @@ namespace ReservasHotel.DB.Data.Entidades
         [Required]
         [MinLength(10, ErrorMessage = "El numero no puede ser menor a {1} caracteres")]
         [MaxLength(11, ErrorMessage = "El numero no puede ser mayor a {1} caracteres")]
-        
+        [RegularExpression("(^[0-9]+$)", ErrorMessage = "Solo se permiten números")]
         public string Cuil { get; set; }
         [Required]
         [MaxLength(150)]

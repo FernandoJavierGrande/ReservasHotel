@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Text;
+using System.Text.Json;
 
 namespace ReservasHotel.Client.Servicios
 {
@@ -24,6 +25,27 @@ namespace ReservasHotel.Client.Servicios
                 return new HttpRespuesta<T>(default, true, response);
             }
         }
+
+        public async Task<HttpRespuesta<object>>Post<T>(string url, T enviar)
+        {
+            try
+            {
+                Console.WriteLine("servicio post +++++");
+                var enviarJson = JsonSerializer.Serialize(enviar); //recibe el objeto T a guardar y lo convierte en json
+                var enviarContent = new StringContent(enviarJson, Encoding.UTF8, "application/json");
+
+                var respuesta = await http.PostAsync(url, enviarContent);
+
+                
+                return new HttpRespuesta<object>(null, !respuesta.IsSuccessStatusCode, respuesta);
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
+        }
+
 
         private async Task<T> DeserializarRespuesta<T>(HttpResponseMessage response)
         {

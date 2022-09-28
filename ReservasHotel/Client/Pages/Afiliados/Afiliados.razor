@@ -3,6 +3,10 @@
 
 <h3>Lista de Afiliados</h3>
 
+<div>
+    <a class = "btn btn-primary" href="Afiliados/Cargar"> Nuevo afiliado</a>
+</div>
+
 <table class="table table-hover table-light table-sm">
     <thead>
         <tr>
@@ -41,7 +45,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        base.OnInitializedAsync();
+        await base.OnInitializedAsync();
 
         await readAfiliados();
 
@@ -52,6 +56,7 @@
         if (!respuesta.Error)
         {
             afiliados = respuesta.Respuesta;
+            
         }
     }
 

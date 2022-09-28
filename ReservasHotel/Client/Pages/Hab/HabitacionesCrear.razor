@@ -1,0 +1,30 @@
+﻿@page "/Habitaciones/Crear"
+@inject IHttpService http
+@inject NavigationManager navigationManager
+
+<h3>Agregar nueva habitación</h3>
+
+<FormHab habitacion="habitacion" onCancel="cancelar" onValidSubmit="grabar">
+
+</FormHab>
+
+
+@code {
+    private Habitacion habitacion = new Habitacion();
+
+    private async void grabar()
+    {
+        var httpRespuesta = await http.Post<Habitacion>("api/Habitacion", habitacion);
+
+        if (httpRespuesta.Error)
+        {
+            var body = httpRespuesta.HttpResponseMessage;
+            Console.WriteLine($"error : {body.Content} {httpRespuesta.Respuesta.ToString()}");
+        }
+        navigationManager.NavigateTo("/Habitaciones");
+    }
+    private void cancelar()
+    {
+        
+    }
+}

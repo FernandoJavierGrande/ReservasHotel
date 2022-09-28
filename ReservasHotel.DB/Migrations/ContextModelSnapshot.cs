@@ -40,8 +40,7 @@ namespace ReservasHotel.DB.Migrations
                         .HasMaxLength(11)
                         .HasColumnType("nvarchar(11)");
 
-                    b.Property<DateTime?>("FechaCreacion")
-                        .IsRequired()
+                    b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Nombre")
@@ -59,18 +58,8 @@ namespace ReservasHotel.DB.Migrations
 
             modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Habitacion", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime?>("FechaCreacion")
-                        .IsRequired()
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("N_DeHabitacion")
-                        .HasColumnType("int");
+                    b.Property<string>("NHab")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Obs")
                         .HasColumnType("nvarchar(max)");
@@ -79,7 +68,10 @@ namespace ReservasHotel.DB.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("NHab");
+
+                    b.HasIndex(new[] { "NHab" }, "nHab_Uq")
+                        .IsUnique();
 
                     b.ToTable("Habitaciones");
                 });
@@ -108,8 +100,7 @@ namespace ReservasHotel.DB.Migrations
                     b.Property<DateTime>("F_inicio")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("FechaCreacion")
-                        .IsRequired()
+                    b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Obs")
@@ -129,13 +120,13 @@ namespace ReservasHotel.DB.Migrations
 
             modelBuilder.Entity("ReservasHotel.DB.Data.Entidades.Reservacion", b =>
                 {
-                    b.Property<int>("HabitacionId")
-                        .HasColumnType("int");
+                    b.Property<string>("HabitacionId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("Fecha")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("Cant_Huespedes")
+                    b.Property<int>("Cant_Huespedes")
                         .HasColumnType("int");
 
                     b.Property<int>("ReservaId")
@@ -159,8 +150,7 @@ namespace ReservasHotel.DB.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<DateTime?>("FechaCreacion")
-                        .IsRequired()
+                    b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("Legajo")
