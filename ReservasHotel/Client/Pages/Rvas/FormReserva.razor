@@ -1,0 +1,144 @@
+﻿@inject IHttpService http
+
+<EditForm Model="afiliado" > 
+    <DataAnnotationsValidator/>
+    <div class="form-control">
+        <label>Cuil del afiliado</label>
+        <div>
+            <InputText class="form-control"  @bind-Value=@afiliado.Cuil ></InputText>
+            <ValidationMessage For="@(() => afiliado.Cuil)"/>
+        </div>
+        <div>
+            <label>Nombre del afiliado</label>
+            <InputText class = "form-control" @bind-Value=afiliado.Nombre  ></InputText>
+        </div>
+        <div>
+            <button class ="btn btn-primary" @onclick = "ExistCuil">Buscar</button>
+        </div>
+    </div>
+    
+</EditForm>
+
+<br/>
+<EditForm Model="reserva" OnValidSubmit="onValidSubmit" > 
+    <DataAnnotationsValidator/>
+    <div class="form-control">
+        <label> fecha de ingreso</label>
+        <div>
+            <InputDate class = "form-control" @bind-Value=@reserva.F_inicio></InputDate>
+            <ValidationMessage For=@(()=> reserva.F_inicio)/>
+        </div>
+        
+    </div>
+    <div class="form-control">
+        <label> fecha de Salida</label>
+        <div>
+            <InputDate class = "form-control" @bind-Value=@reserva.F_fin></InputDate>
+            <ValidationMessage For=@(()=> reserva.F_fin)/>
+        </div>
+    </div>
+
+    <div class="form-control">
+        <div >
+            <label>Seleccione las habitaciones</label>
+
+            <select  id="cmbHab" class = "form-control-label" @onchange="HabSel">
+                <option value="0" selected disabled>- Seleccione la habitacion -</option>
+                @foreach (var hab in habitaciones)
+                {
+                    <option value="@hab.NHab">@hab.NHab  @hab.Tipo</option>
+                }
+            </select>
+        </div>
+        <div>
+            <label>Estado del pago de la reserva (pagado, señado)</label>
+            <InputText class="form-control" @bind-Value=@reserva.EstadoPago></InputText>
+        </div>
+        <div>
+            <label>Observaciones</label>
+            <InputText class ="form-control" @bind-Value=@reserva.Obs></InputText>
+        </div>
+    </div>
+    <div>
+        <button class ="btn btn-primary" type="submit">Aceptar</button>
+    </div>
+</EditForm>
+
+
+@code {
+    [Parameter] public Afiliado afiliado { get; set; }
+    [Parameter] public Reserva reserva { get; set; }
+    [Parameter] public EventCallback onValidSubmit { get; set; }
+    //[Parameter] public EventCallback HabSeleccionada { get; set; }
+
+    private List<Habitacion> habitaciones = new List<Habitacion>();
+    private List<string> ListaDeHab = new List<string>();
+    private string habActual="0";
+
+
+    private async void ExistCuil()
+    {
+
+        if (afiliado.Cuil!=null && !afiliado.Cuil.Contains(" "))
+        {
+            Console.WriteLine($"cuil :{afiliado.Cuil}");
+            var httpRespuesta = await http.Get<Afiliado>($"api/Afiliados/{afiliado.Cuil}");
+
+            if (!httpRespuesta.Error) // si existe el afiliado carga el id De la resp
+            {
+                reserva.AfiliadoId = httpRespuesta.Respuesta.Id;
+                afiliado.Nombre =$"{httpRespuesta.Respuesta.Nombre} { httpRespuesta.Respuesta.Apellido}";
+
+            }else
+            {
+                var body = httpRespuesta.HttpResponseMessage;
+                afiliado.Nombre = string.Empty;
+                Console.WriteLine($" esta en el else");
+            }
+        }
+        else
+        {
+            Console.WriteLine("el campo es nulo");
+        }
+    }
+    private void HabSel(ChangeEventArgs e)
+    {
+
+        if (!ListaDeHab.Contains(e.Value))
+        {
+            ListaDeHab.Add(e.Value.ToString());
+            reserva.HabitacionesEnLaReserva = ListaDeHab;
+        }      
+
+        foreach (var item in reserva.HabitacionesEnLaReserva)
+        {
+            Console.WriteLine($"hab {item}");
+        }
+
+    }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        base.OnInitializedAsync();
+
+        reserva.FechaCreacion = DateTime.Today.Date;
+        reserva.Estado = true;
+        await LeerHabitaciones();
+
+    }
+
+    private async Task LeerHabitaciones()
+    {
+        var respuesta = await http.Get<List<Habitacion>>("api/Habitacion");
+        if (!respuesta.Error)
+        {
+            foreach (var hab in respuesta.Respuesta)
+            {
+                habitaciones.Add(hab);
+            }
+        }
+
+    }
+
+}

@@ -1,0 +1,32 @@
+﻿@page "/Reservas/NuevaReserva"
+@inject IHttpService http
+@inject NavigationManager navigationManager
+
+
+<FormReserva 
+            afiliado= "afiliado" 
+            onValidSubmit="guardar"
+            reserva="reserva">        
+</FormReserva>
+
+@code {
+    private Reserva reserva = new Reserva();
+    private Afiliado afiliado = new Afiliado();
+
+    private async void guardar()
+    {
+        
+        var httpRespuesta = await http.Post<Reserva>("api/Reserva", reserva);
+        if (httpRespuesta.Error)
+        {
+            var body = httpRespuesta.HttpResponseMessage;
+            
+        }
+        else
+        {
+            navigationManager.NavigateTo("/Calendario");
+        }
+    } 
+    
+
+}

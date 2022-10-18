@@ -12,11 +12,12 @@ namespace ReservasHotel.Server.Controllers
     public class ReservaController : ControllerBase
     {
         private readonly Context dbcontext;
-
+        private Reserva reserva1 = new Reserva();
         #region ctor
         public ReservaController(Context dbcontext)
         {
             this.dbcontext = dbcontext;
+            
         }
         #endregion
 
@@ -36,7 +37,7 @@ namespace ReservasHotel.Server.Controllers
             return reservas;
         }
 
-        [HttpPost("/AgregarNuevaReserva")] // recibe una reserva y la hab creando las reservaciones correspondientes y guarda
+        [HttpPost] // recibe una reserva y la hab creando las reservaciones correspondientes y guarda
         public async Task<ActionResult<Reserva>> Post(Reserva reserva)
         {
             reserva.UsuarioId = int.Parse(User.Claims.Where(x => x.Type == "Id").Select(i => i.Value).First());
@@ -44,11 +45,16 @@ namespace ReservasHotel.Server.Controllers
             if ( reserva.F_inicio > reserva.F_fin)
                 return BadRequest("Inconsistencias en las fechas.");
 
+            Console.WriteLine($"usuarioId: {reserva.UsuarioId}");
+
             Reservacion reservacion;
+            List<Reservacion> listaDeRciones = new List<Reservacion>();
 
             int canDeDias = (reserva.F_fin - reserva.F_inicio).Days + 1;
             int cantDeHab = reserva.HabitacionesEnLaReserva.Count();
 
+            
+            reserva1 = reserva;
             try
             {
                 for (int j = 0; j < cantDeHab; j++)
@@ -61,9 +67,11 @@ namespace ReservasHotel.Server.Controllers
 
                         reservacion.Fecha = reserva.F_inicio.AddDays(i);
 
-                        reservacion.Cant_Huespedes = reserva.PaxPorHabitacion[j];
+                        reservacion.Cant_Huespedes = 1; //eliminar
 
-                        reserva.Reservaciones.Add(reservacion);
+                        listaDeRciones.Add(reservacion);
+
+                        reserva.Reservaciones = listaDeRciones ;
                     }
                 }
                 dbcontext.Reservas.Add(reserva);
@@ -72,9 +80,9 @@ namespace ReservasHotel.Server.Controllers
 
                 return Ok(reserva);
             }
-            catch (Exception e)
+            catch (Exception )
             {
-                return BadRequest("No pudo agendar la reserva, vuelva a intentarlo " + e);
+                return BadRequest("No pudo agendar la reserva, vuelva a intentarlo ");
             }
         }
 

@@ -29,7 +29,7 @@ namespace ReservasHotel.DB.Data.Entidades
         [DataType(DataType.Date)]  
         public DateTime Fecha { get; set; }
         
-        public int Cant_Huespedes { get; set; }
+        public int Cant_Huespedes { get; set; } //eliminar de la bbdd
 
 
         

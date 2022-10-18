@@ -6,6 +6,7 @@ using ReservasHotel.DB.Data.Entidades;
 
 namespace ReservasHotel.Server.Controllers
 {
+    //[Authorize]
     [ApiController]
     [Route("api/Afiliados")]
     public class AfiliadoController : ControllerBase
@@ -35,7 +36,8 @@ namespace ReservasHotel.Server.Controllers
 
             if (afiliado == null)
             {
-                return NotFound($"El afiliado con cuil {Cuil} no existe. Verifique los numeros");
+                
+                return BadRequest($"El afiliado con cuil {Cuil} no existe. Verifique los numeros");
             }
             else
             {

@@ -30,7 +30,6 @@ namespace ReservasHotel.Client.Servicios
         {
             try
             {
-                Console.WriteLine("servicio post +++++");
                 var enviarJson = JsonSerializer.Serialize(enviar); //recibe el objeto T a guardar y lo convierte en json
                 var enviarContent = new StringContent(enviarJson, Encoding.UTF8, "application/json");
 

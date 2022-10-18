@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ReservasHotel.DB.Data;
 using ReservasHotel.DB.Data.Entidades;
 
 namespace ReservasHotel.Server.Controllers
 {
+    //[Authorize]
     [ApiController]
     [Route("api/Habitacion")]
     public class HabitacionController: ControllerBase
