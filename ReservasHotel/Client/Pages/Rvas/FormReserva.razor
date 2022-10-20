@@ -22,21 +22,19 @@
 <br/>
 <EditForm Model="reserva" OnValidSubmit="onValidSubmit" > 
     <DataAnnotationsValidator/>
-    <div class="form-control">
-        <label> fecha de ingreso</label>
+    <div class="form-control-lg">
+        <label> Fecha de ingreso</label>
         <div>
             <InputDate class = "form-control" @bind-Value=@reserva.F_inicio></InputDate>
             <ValidationMessage For=@(()=> reserva.F_inicio)/>
-        </div>
-        
-    </div>
-    <div class="form-control">
-        <label> fecha de Salida</label>
+        <label> Fecha de Salida</label>
         <div>
             <InputDate class = "form-control" @bind-Value=@reserva.F_fin></InputDate>
             <ValidationMessage For=@(()=> reserva.F_fin)/>
         </div>
+        </div>    
     </div>
+    
 
     <div class="form-control">
         <div >
@@ -59,9 +57,13 @@
             <InputText class ="form-control" @bind-Value=@reserva.Obs></InputText>
         </div>
     </div>
-    <div>
+    <div class="col-md-3 col-md-offset-9 text-right">
         <button class ="btn btn-primary" type="submit">Aceptar</button>
+        <button class ="btn alert-secondary" @onclick="cancelar"> Cancelar</button>
     </div>
+    
+    
+    
 </EditForm>
 
 
@@ -69,7 +71,7 @@
     [Parameter] public Afiliado afiliado { get; set; }
     [Parameter] public Reserva reserva { get; set; }
     [Parameter] public EventCallback onValidSubmit { get; set; }
-    //[Parameter] public EventCallback HabSeleccionada { get; set; }
+    [Parameter] public EventCallback cancelar { get; set; }
 
     private List<Habitacion> habitaciones = new List<Habitacion>();
     private List<string> ListaDeHab = new List<string>();
@@ -124,6 +126,8 @@
 
         reserva.FechaCreacion = DateTime.Today.Date;
         reserva.Estado = true;
+        reserva.F_inicio = DateTime.Today.Date;
+        reserva.F_fin = DateTime.Today.Date.AddDays(1);
         await LeerHabitaciones();
 
     }

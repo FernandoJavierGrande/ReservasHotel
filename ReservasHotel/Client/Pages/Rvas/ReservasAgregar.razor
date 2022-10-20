@@ -1,12 +1,13 @@
-﻿@page "/Reservas/NuevaReserva"
+﻿@page "/NuevaReserva"
 @inject IHttpService http
 @inject NavigationManager navigationManager
 
 
 <FormReserva 
             afiliado= "afiliado" 
+            cancelar="cancelar"
             onValidSubmit="guardar"
-            reserva="reserva">        
+            reserva="reserva">      
 </FormReserva>
 
 @code {
@@ -15,18 +16,22 @@
 
     private async void guardar()
     {
-        
+
         var httpRespuesta = await http.Post<Reserva>("api/Reserva", reserva);
         if (httpRespuesta.Error)
         {
             var body = httpRespuesta.HttpResponseMessage;
-            
+
         }
         else
         {
             navigationManager.NavigateTo("/Calendario");
-        }
+        } 
     } 
-    
+    private void cancelar()
+    {
+        navigationManager.NavigateTo("/Calendario");
+    }
+
 
 }
