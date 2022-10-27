@@ -41,7 +41,7 @@ namespace ReservasHotel.Server.Controllers
             {
                 reservaciones = new List<Reservacion>();
                 
-                for (int i = 0; i < 7; i++)
+                for (int i = 0; i < DIAS; i++) 
                 {
                     bool disp = await dbcontext.Reservaciones
                         .AnyAsync(r => r.Fecha == fecha.AddDays(i) && r.HabitacionId == habitacion.NHab);
@@ -64,7 +64,7 @@ namespace ReservasHotel.Server.Controllers
                 }
                 listaDeListas.Add(reservaciones);
             }
-            Console.WriteLine($"listade listas  {listaDeListas.Count}");
+            Console.WriteLine($"listade listas  {listaDeListas.Count}"); // eliminar si funciona
             Console.WriteLine($"cantidad de dias {listaDeListas[0].Count}");
             return listaDeListas;
         }

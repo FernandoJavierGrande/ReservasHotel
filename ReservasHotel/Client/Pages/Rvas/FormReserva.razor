@@ -1,20 +1,18 @@
 ﻿@inject IHttpService http
 
-<EditForm Model="afiliado" > 
+<EditForm Model="afiliado" OnValidSubmit="onValidSubmit" > 
     <DataAnnotationsValidator/>
     <div class="form-control">
         <label>Cuil del afiliado</label>
         <div>
-            <InputText class="form-control"  @bind-Value=@afiliado.Cuil ></InputText>
+            <InputText class="form-control"  @bind-Value=@afiliado.Cuil @onfocusout="ExistCuil" ></InputText>
             <ValidationMessage For="@(() => afiliado.Cuil)"/>
         </div>
         <div>
             <label>Nombre del afiliado</label>
-            <InputText class = "form-control" @bind-Value=afiliado.Nombre  ></InputText>
+            <InputText class = "form-control" @bind-Value=afiliado.Nombre disabled="disabled" ></InputText>
         </div>
-        <div>
-            <button class ="btn btn-primary" @onclick = "ExistCuil">Buscar</button>
-        </div>
+        
     </div>
     
 </EditForm>
@@ -48,6 +46,19 @@
                 }
             </select>
         </div>
+        <br />
+        <div class="form-group">
+            <label>Usted seleccionó las habitaciones: @foreach (var item in ListaDeHab)
+                {
+                    <label>@item.ToString();</label>
+                }</label>
+                <div>
+                    <button class="btn btn-light"  @onclick="Limpiar">Limpiar</button>
+                </div>
+                
+        </div>
+       
+        
         <div>
             <label>Estado del pago de la reserva (pagado, señado)</label>
             <InputText class="form-control" @bind-Value=@reserva.EstadoPago></InputText>
@@ -83,24 +94,19 @@
 
         if (afiliado.Cuil!=null && !afiliado.Cuil.Contains(" "))
         {
-            Console.WriteLine($"cuil :{afiliado.Cuil}");
             var httpRespuesta = await http.Get<Afiliado>($"api/Afiliados/{afiliado.Cuil}");
 
             if (!httpRespuesta.Error) // si existe el afiliado carga el id De la resp
             {
                 reserva.AfiliadoId = httpRespuesta.Respuesta.Id;
                 afiliado.Nombre =$"{httpRespuesta.Respuesta.Nombre} { httpRespuesta.Respuesta.Apellido}";
-
+                StateHasChanged();
             }else
             {
                 var body = httpRespuesta.HttpResponseMessage;
-                afiliado.Nombre = string.Empty;
-                Console.WriteLine($" esta en el else");
+                afiliado.Nombre = "El afiliado no existe";
+                StateHasChanged();
             }
-        }
-        else
-        {
-            Console.WriteLine("el campo es nulo");
         }
     }
     private void HabSel(ChangeEventArgs e)
@@ -111,12 +117,6 @@
             ListaDeHab.Add(e.Value.ToString());
             reserva.HabitacionesEnLaReserva = ListaDeHab;
         }      
-
-        foreach (var item in reserva.HabitacionesEnLaReserva)
-        {
-            Console.WriteLine($"hab {item}");
-        }
-
     }
 
 
@@ -127,7 +127,8 @@
         reserva.FechaCreacion = DateTime.Today.Date;
         reserva.Estado = true;
         reserva.F_inicio = DateTime.Today.Date;
-        reserva.F_fin = DateTime.Today.Date.AddDays(1);
+        reserva.F_fin = reserva.F_inicio;
+
         await LeerHabitaciones();
 
     }
@@ -143,6 +144,11 @@
             }
         }
 
+    }
+    private void Limpiar()
+    {
+        ListaDeHab = new List<string>();
+        StateHasChanged();
     }
 
 }

@@ -24,7 +24,7 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(option => {
         option.LoginPath = "/api/Registrarse";
-        option.ExpireTimeSpan = TimeSpan.FromMinutes(10);
+        option.ExpireTimeSpan = TimeSpan.FromMinutes(20);
         option.AccessDeniedPath = "/fetchdata";
     });
 

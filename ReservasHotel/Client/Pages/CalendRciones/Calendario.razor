@@ -8,11 +8,14 @@
      <a class = "btn btn-primary" href="NuevaReserva"> Agregar reserva </a>
 </div>
    
+<button class=" oi oi-arrow-circle-left" @onclick="DismFecha"></button>
+<button class=" oi oi-arrow-circle-right" @onclick="AumentarFecha"></button>
+
 <table class="table table-bordered">
     <thead style="background-color:#D8E7F8">
         <tr>
             <th>Num Hab </th>
-           @foreach(var lista in reservaciones)
+           @foreach(var lista in reservaciones) // lee los elementos de la primera fila
            {
               @foreach (var dias in lista)
               {
@@ -46,22 +49,38 @@
 
 @code {
     List<List<Reservacion>> reservaciones = new List<List<Reservacion>>();
+    private DateTime fecha_Seleccion;
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
 
+        fecha_Seleccion = DateTime.Today.Date;
         await disponibilidad();
     }
 
     private async Task disponibilidad()
     {
-        var respuesta = await http.Get<List<List<Reservacion>>>("api/Fechas");
+        string fecha = fecha_Seleccion.ToString();
+        Console.WriteLine($" fecha convertida {fecha}");
+        var respuesta = await http.Get<List<List<Reservacion>>>($"api/Fechas");
         if (!respuesta.Error)
         {
             reservaciones = respuesta.Respuesta;
+            StateHasChanged();
+
             Console.WriteLine($"res desde calendario {reservaciones.Count}");
             Console.WriteLine($"dias desde calendario {reservaciones[0].Count}");
         }
+    }
+    private void AumentarFecha()
+    {
+        fecha_Seleccion.AddDays(7);
+        disponibilidad();
+    }
+    private void DismFecha()
+    {
+        fecha_Seleccion.AddDays(-7);
+        disponibilidad();
     }
 }
