@@ -24,13 +24,13 @@ namespace ReservasHotel.Server.Controllers
 
 
 
-        [HttpGet]
-        public async Task<ActionResult<List<List<Reservacion>>>> Get()
+        [HttpGet("{fe}")]
+        public async Task<ActionResult<List<List<Reservacion>>>> Get(string fe, int dias = 7)
             //necesito que retorne una lista de dias ocupados y no
         {
              
-            int DIAS = 7;
-            DateTime fecha = DateTime.Today.Date;
+            
+            DateTime fecha = DateTime.Parse(fe);
 
             var habitaciones = await dbcontext.Habitaciones.ToListAsync();
 
@@ -41,7 +41,7 @@ namespace ReservasHotel.Server.Controllers
             {
                 reservaciones = new List<Reservacion>();
                 
-                for (int i = 0; i < DIAS; i++) 
+                for (int i = 0; i < dias; i++) 
                 {
                     bool disp = await dbcontext.Reservaciones
                         .AnyAsync(r => r.Fecha == fecha.AddDays(i) && r.HabitacionId == habitacion.NHab);
@@ -69,17 +69,17 @@ namespace ReservasHotel.Server.Controllers
             return listaDeListas;
         }
 
-        [HttpGet("/DiasReservados")]
-        public async Task<ActionResult<List<Reservacion>>> GetReservas(DateTime fecha, int cantidad = 10)
-        {
-            DateTime fechaLimite = fecha.AddDays(cantidad);
+        //[HttpGet("/DiasReservados")]
+        //public async Task<ActionResult<List<Reservacion>>> GetReservas(DateTime fecha, int cantidad = 10)
+        //{
+        //    DateTime fechaLimite = fecha.AddDays(cantidad);
 
-            var diasReservados = dbcontext.Reservaciones.Where(
-                d => d.Fecha >= fecha && d.Fecha <= fechaLimite)
-                .ToListAsync();
+        //    var diasReservados = dbcontext.Reservaciones.Where(
+        //        d => d.Fecha >= fecha && d.Fecha <= fechaLimite)
+        //        .ToListAsync();
 
-            return await diasReservados;
-        }
+        //    return await diasReservados;
+        //}
 
 
         #endregion

@@ -26,7 +26,7 @@ namespace ReservasHotel.Server.Controllers
           => await dbcontext.Reservas.ToListAsync();
 
 
-        [HttpGet("{resid}")]//esto va a fallar fata especificar el tipo
+        [HttpGet("{resid}")]
         public async Task<ActionResult<List<Reserva>>> Getid(int resid)
         {
             var reservas = await dbcontext.Reservas
