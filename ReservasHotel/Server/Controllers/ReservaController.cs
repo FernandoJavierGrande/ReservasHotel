@@ -26,13 +26,13 @@ namespace ReservasHotel.Server.Controllers
           => await dbcontext.Reservas.ToListAsync();
 
 
-        [HttpGet("{resid}")]
-        public async Task<ActionResult<List<Reserva>>> Getid(int resid)
+        [HttpGet("{resid:int}")]
+        public async Task<ActionResult<Reserva>> Getid(int resid)
         {
             var reservas = await dbcontext.Reservas
                 .Where(r => r.Id == resid)
-                .Include(x => x.Reservaciones)
-                .ToListAsync();  
+                .Include(x => x.Reservaciones).FirstOrDefaultAsync();
+                
 
             return reservas;
         }

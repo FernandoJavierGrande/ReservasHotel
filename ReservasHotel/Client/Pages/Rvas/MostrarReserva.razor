@@ -1,0 +1,51 @@
+﻿@page "/Reservas/Editar/{idRes:int}"
+@inject IHttpService http
+@inject NavigationManager navigationManager
+<h3>Reserva @idRes</h3>
+
+<FormReserva
+             reserva = "reserva"
+             afiliado = "afiliado"
+             cancelar = "cancelar"
+             onValidSubmit ="eliminar">
+
+</FormReserva>
+
+@code {
+    [Parameter] public int idRes { get; set; }
+    private Reserva reserva = new Reserva();
+    private Afiliado afiliado = new Afiliado();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        await BuscarReserva();
+    }
+
+    private async Task BuscarReserva()
+    {
+        var resp = await http.Get<Reserva>($"api/Reserva/{idRes}");
+        if (!resp.Error)
+        {
+            reserva = resp.Respuesta;
+            StateHasChanged();
+            var respuesta = await http.Get<Afiliado>($"api/Afiliados/{reserva.AfiliadoId}");
+            if (!respuesta.Error)
+            {
+                afiliado = respuesta.Respuesta;
+                StateHasChanged();
+            }
+        }
+
+    }
+    private void eliminar()
+    {
+
+    }
+    private void cancelar()
+    {
+        navigationManager.NavigateTo("/Calendario");
+    }
+}

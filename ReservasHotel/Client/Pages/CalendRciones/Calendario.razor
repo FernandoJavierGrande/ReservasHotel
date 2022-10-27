@@ -43,17 +43,30 @@
                else
                {
                    <td style= "background-color:#FD5050">@item.ReservaId</td>
+                   @if(!idsRes.Contains(item.ReservaId)) {idsRes.Add(item.ReservaId);};
                }
             }
         </tr>
        }
     </tbody>
 </table>
+<br />
+
+<div>
+    <div>
+        <label> buscar reserva por codigo</label>
+    </div>
+        <input type="number" class="form-control-sm" @bind=@reservaConsultar/>
+        <a class="btn btn-primary" href="/Reservas/Editar/@reservaConsultar"> Buscar</a>
+</div>
+
 
 
 
 @code {
     List<List<Reservacion>> reservaciones = new List<List<Reservacion>>();
+    List<int> idsRes = new List<int>();//?
+    private int reservaConsultar=0;
     private DateTime fecha_Seleccion;
     int cant_dias = 7;
 

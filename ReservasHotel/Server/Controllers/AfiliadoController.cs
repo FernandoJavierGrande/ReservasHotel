@@ -45,18 +45,17 @@ namespace ReservasHotel.Server.Controllers
             }
         }
 
-        //[HttpGet("{afiliado:int}")]
-        //public async Task<ActionResult<List<Reserva>>> GetRva(int afiliado)
-        //{
-        //    var reserva = await dbContext.Reservas.Where(r => r.AfiliadoId == afiliado)
-        //        .Include(a => a.).ToListAsync();
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<Afiliado>> GetRva(int id)
+        {
+            var afiliado = await dbContext.Afiliados.Where(r => r.Id == id).FirstOrDefaultAsync(); 
 
-        //    if (reserva != null)
-        //    {
-        //        return reserva;
-        //    }
-        //    return NotFound("no se encontro");
-        //}
+            if (afiliado != null)
+            {
+                return afiliado;
+            }
+            return NotFound("no se encontro");
+        }
         //[HttpGet("Reservas")]
 
 
