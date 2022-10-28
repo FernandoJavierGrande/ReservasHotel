@@ -32,9 +32,16 @@ namespace ReservasHotel.Server.Controllers
             var reservas = await dbcontext.Reservas
                 .Where(r => r.Id == resid)
                 .Include(x => x.Reservaciones).FirstOrDefaultAsync();
-                
 
-            return reservas;
+            if(reservas == null)
+            {
+                return BadRequest("No existe");
+            }
+            else
+            {
+                return reservas;
+            }
+            
         }
 
         [HttpPost] // recibe una reserva y la hab creando las reservaciones correspondientes y guarda

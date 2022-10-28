@@ -13,6 +13,8 @@
             <th scope="col">Cuil</th>
             <th scope="col">Nombre</th>
             <th scope="col">Apellido</th>
+            <th> </th>
+            <th> </th>
         </tr>
     </thead>
     <tbody>
@@ -31,17 +33,34 @@
                 <tr>
                     <td>@item.Cuil</td>
                     <td>@item.Nombre</td>
-                 <td>@item.Apellido</td>
+                    <td>@item.Apellido</td>
+                    <td> <a class="btn btn-secondary" href="/Habitaciones/Editar/@item.Cuil">Editar</a></td>
+                    <td> <a class="btn btn-warning" @onclick="()=>Eliminar(item)">Eliminar</a></td>
                 </tr>
             }
         }
     </tbody>
     
     </table>
+    <Confirmacion   @ref="confirmacion" 
+                verCancelar = "true"
+                verOk="true"
+                Titulo="Eliminar afiliado de la base de datos"
+                onCancel="Cerrar"
+                onConfirm="BorrarAfiliado">
+                <div>
+                   ¿Desea eliminar el afiliado Cuil: @AfiliadoBorrar.Cuil
+                    <br/>
+                    Nombre: @AfiliadoBorrar.Apellido @AfiliadoBorrar.Nombre? 
+                </div>
+
+    </Confirmacion>
 
 
 @code {
     List<Afiliado> afiliados = new List<Afiliado>();
+    Afiliado AfiliadoBorrar;
+    Confirmacion confirmacion;
 
     protected override async Task OnInitializedAsync()
     {
@@ -58,6 +77,26 @@
             afiliados = respuesta.Respuesta;
             
         }
+    }
+    private void Eliminar(Afiliado afiliado)
+    {
+        AfiliadoBorrar = afiliado;
+        confirmacion.Ver();
+    }
+    private void Cerrar()
+    {
+        confirmacion.Ocultar();
+        AfiliadoBorrar = null;
+    }
+    private async Task BorrarAfiliado()
+    {
+        var resp = await http.Delete($"api/Afiliados/{AfiliadoBorrar.Cuil}");
+        if(resp.Error)
+        {
+            var body = "Error";
+        }
+        Cerrar();
+        await readAfiliados();
     }
 
 }

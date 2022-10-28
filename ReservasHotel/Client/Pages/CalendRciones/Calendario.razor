@@ -1,5 +1,6 @@
 ﻿@page "/Calendario"
 
+@inject NavigationManager navigationManager
 @inject IHttpService http
 
 <h3>Calendario de habitaciones</h3>
@@ -32,21 +33,20 @@
     <tbody>
         @foreach (var lista in reservaciones)
        {
-        <tr>
-           <th>@lista[0].HabitacionId</th>
-           @foreach (var item in lista)
-           {
-               @if (item.ReservaId==0)
-               {
-                    <td style= "background-color:#A0F981">Libre</td>
-               }
-               else
-               {
-                   <td style= "background-color:#FD5050">@item.ReservaId</td>
-                   @if(!idsRes.Contains(item.ReservaId)) {idsRes.Add(item.ReservaId);};
-               }
-            }
-        </tr>
+            <tr>
+                <th>@lista[0].HabitacionId</th>
+                    @foreach (var item in lista)
+                    {
+                        @if (item.ReservaId==0)
+                        {
+                            <td style= "background-color:#A0F981">Libre</td>
+                        }
+                        else
+                        {
+                            <td style= "background-color:#FD5050">Rva n°: @item.ReservaId</td>
+                        }
+                    }
+            </tr>
        }
     </tbody>
 </table>
@@ -57,18 +57,32 @@
         <label> buscar reserva por codigo</label>
     </div>
         <input type="number" class="form-control-sm" @bind=@reservaConsultar/>
-        <a class="btn btn-primary" href="/Reservas/Editar/@reservaConsultar"> Buscar</a>
+        <button class="btn btn-primary" @onclick="Buscar"> Buscar</button>
 </div>
 
+<Confirmacion   @ref="mensaje" 
+                verCancelar = "true"
+                verOk="false"
+                Titulo="No se encontró"
+                onCancel="Cerrar"
+                onConfirm="conf">
+                <div>
+                    La reserva no existe.
+                </div>
+
+</Confirmacion>
 
 
 
 @code {
     List<List<Reservacion>> reservaciones = new List<List<Reservacion>>();
-    List<int> idsRes = new List<int>();//?
+    List<int> idsRes = new List<int>();
+    Confirmacion mensaje;
+
     private int reservaConsultar=0;
     private DateTime fecha_Seleccion;
     int cant_dias = 7;
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -82,7 +96,6 @@
     {
         string fecha = $"{fecha_Seleccion.Year.ToString()}-{fecha_Seleccion.Month.ToString()}-{fecha_Seleccion.Day.ToString()}";
 
-        Console.WriteLine($"fecha = {fecha}");
         var respuesta = await http.Get<List<List<Reservacion>>>($"api/Fechas/{fecha}?dias={cant_dias}");
         if (!respuesta.Error)
         {
@@ -96,9 +109,36 @@
         fecha_Seleccion = fecha_Seleccion.AddDays(cant_dias);
         await disponibilidad();
     }
+
     private void DismFecha()//paginacion
     {
         fecha_Seleccion = fecha_Seleccion.AddDays(-(cant_dias));
         disponibilidad();
     }
+
+    private void Cerrar()
+    {
+        mensaje.Ocultar();
+        reservaConsultar = 0;
+        //StateHasChanged();
+    }
+
+    private async Task Buscar()
+    {
+        var resp = await http.Get<Reserva>($"api/Reserva/{reservaConsultar}");
+
+        if (resp.Error)
+        {
+            mensaje.Ver();
+        }
+        else
+        {
+            navigationManager.NavigateTo($"/Reservas/Editar/{reservaConsultar}");
+        }
+        
+    }  
+
+    private void conf (){} 
+
+
 }

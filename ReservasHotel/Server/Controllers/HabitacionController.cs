@@ -75,5 +75,28 @@ namespace ReservasHotel.Server.Controllers
         }
         #endregion
 
+        [HttpDelete("{id}")]
+        public ActionResult Delete(string id)
+        {
+            var habElim = dbcontext.Habitaciones.Where(x => x.NHab == id).FirstOrDefault();
+
+            if (habElim == null)
+            {
+                return NotFound($"El registro {id} no fue encontrado");
+            }
+
+            try
+            {
+                dbcontext.Habitaciones.Remove(habElim);
+                dbcontext.SaveChanges();
+                return Ok();
+            }
+            catch (Exception )
+            {
+                return BadRequest("no se pudo eliminar");
+            }
+        }
+
     }
+
 }

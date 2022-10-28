@@ -52,13 +52,13 @@
                 {
                     <label>@item.ToString();</label>
                 }</label>
-                <div>
-                    <button class="btn btn-light"  @onclick="Limpiar">Limpiar</button>
-                </div>
-                
+            <div>
+                <button class="btn btn-light"  @onclick="Limpiar">Limpiar</button>
+            </div>
+
         </div>
-       
-        
+
+
         <div>
             <label>Estado del pago de la reserva (pagado, señado)</label>
             <InputText class="form-control" @bind-Value=@reserva.EstadoPago></InputText>
@@ -72,9 +72,9 @@
         <button class ="btn btn-primary" type="submit">Aceptar</button>
         <button class ="btn alert-secondary" @onclick="cancelar"> Cancelar</button>
     </div>
-    
-    
-    
+
+
+
 </EditForm>
 
 
@@ -83,9 +83,11 @@
     [Parameter] public Reserva reserva { get; set; }
     [Parameter] public EventCallback onValidSubmit { get; set; }
     [Parameter] public EventCallback cancelar { get; set; }
+    [Parameter] public List<string> ListaDeHab { get; set; }
+     
 
     private List<Habitacion> habitaciones = new List<Habitacion>();
-    private List<string> ListaDeHab = new List<string>();
+    
     private string habActual="0";
 
 

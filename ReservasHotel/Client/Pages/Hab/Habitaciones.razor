@@ -15,6 +15,8 @@
             <th scope="col">N° Habitacion </th>
             <th scope="col">Tipo</th>
             <th scope="col">Observaciones </th>
+            <th> </th>
+            <th> </th>
         </tr>
     </thead>
     <tbody>
@@ -33,16 +35,31 @@
                 <tr>
                     <td>@item.NHab</td>
                     <td>@item.Tipo</td>
-                 <td>@item.Obs</td>
+                    <td>@item.Obs</td>
+                    <td> <a class="btn btn-secondary" href="/Habitaciones/Editar/@item.NHab">Editar</a></td>
+                    <td> <a class="btn btn-warning" @onclick="()=>Eliminar(item)">Eliminar</a></td>
                 </tr>
             }
         }
     </tbody>
 </table>
 
+<Confirmacion   @ref="confirmacion" 
+                verCancelar = "true"
+                verOk="true"
+                Titulo="Eliminar habitación"
+                onCancel="Cerrar"
+                onConfirm="BorrarHab">
+                <div>
+                    Desea eliminar la habitacion N° @HabBorrar.NHab
+                </div>
+
+</Confirmacion>
+
 @code {
     List<Habitacion> habitaciones = new List<Habitacion>();
-
+    Habitacion HabBorrar;
+    Confirmacion confirmacion;
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
@@ -53,11 +70,32 @@
 
     private async Task readHabitaciones()
     {
-         var respuesta = await http.Get<List<Habitacion>>("api/Habitacion");
+        var respuesta = await http.Get<List<Habitacion>>("api/Habitacion");
         if (!respuesta.Error)
         {
             habitaciones = respuesta.Respuesta; 
         }
+    }
+
+    private void Eliminar(Habitacion habitacion)
+    {
+        HabBorrar = habitacion;
+        confirmacion.Ver();
+    }
+    private void Cerrar()
+    {
+        confirmacion.Ocultar();
+        HabBorrar = null;
+    }
+    private async Task BorrarHab()
+    {
+        var resp = await http.Delete($"api/Habitacion/{HabBorrar.NHab}");
+        if(resp.Error)
+        {
+            var body = "Error";
+        }
+        Cerrar();
+        await readHabitaciones();
     }
 
 }

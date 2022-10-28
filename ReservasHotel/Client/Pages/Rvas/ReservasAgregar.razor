@@ -7,12 +7,15 @@
             afiliado= "afiliado" 
             cancelar="cancelar"
             onValidSubmit="guardar"
-            reserva="reserva">      
+            reserva="reserva"
+            ListaDeHab ="listaDeHab">
+            
 </FormReserva>
 
 @code {
     private Reserva reserva = new Reserva();
     private Afiliado afiliado = new Afiliado();
+    private List<string> listaDeHab = new List<string>();
 
     private async void guardar()
     {

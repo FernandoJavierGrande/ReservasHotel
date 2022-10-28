@@ -1,13 +1,14 @@
 ﻿@page "/Reservas/Editar/{idRes:int}"
 @inject IHttpService http
 @inject NavigationManager navigationManager
-<h3>Reserva @idRes</h3>
+<h3>Reserva n° @idRes </h3>
 
 <FormReserva
              reserva = "reserva"
              afiliado = "afiliado"
              cancelar = "cancelar"
-             onValidSubmit ="eliminar">
+             onValidSubmit ="eliminar"
+             ListaDeHab = "listaDeHab">
 
 </FormReserva>
 
@@ -15,7 +16,7 @@
     [Parameter] public int idRes { get; set; }
     private Reserva reserva = new Reserva();
     private Afiliado afiliado = new Afiliado();
-
+    private List<string> listaDeHab = new List<string>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -30,6 +31,13 @@
         if (!resp.Error)
         {
             reserva = resp.Respuesta;
+            foreach (var item in resp.Respuesta.Reservaciones)
+            {
+                if (!listaDeHab.Contains(item.HabitacionId))
+                {
+                    listaDeHab.Add(item.HabitacionId);
+                }
+            }
             StateHasChanged();
             var respuesta = await http.Get<Afiliado>($"api/Afiliados/{reserva.AfiliadoId}");
             if (!respuesta.Error)

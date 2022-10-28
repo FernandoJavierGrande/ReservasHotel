@@ -92,5 +92,28 @@ namespace ReservasHotel.Server.Controllers
                 
             }
         }
+
+        [HttpDelete("{cuil}")]
+        public ActionResult Delete(string cuil)
+        {
+            var afEliminar = dbContext.Afiliados.Where(x => x.Cuil == cuil).FirstOrDefault();
+
+            if (afEliminar == null)
+            {
+                return NotFound($"El registro {cuil} no fue encontrado");
+            }
+
+            try
+            {
+                dbContext.Afiliados.Remove(afEliminar);
+                dbContext.SaveChanges();
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("no se pudo eliminar");
+            }
+        }
     }
+
 }
