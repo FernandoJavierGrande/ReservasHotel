@@ -96,33 +96,53 @@ namespace ReservasHotel.Server.Controllers
 
         #region Delete
 
-        [HttpDelete]
-        public async Task<ActionResult> EliminarRva(Reserva reserva)
+        //[HttpDelete]
+        //public async Task<ActionResult> EliminarRva(Reserva reserva)
+        //{
+        //    try
+        //    {
+        //        var ExisteReserva = await dbcontext.Reservas.AnyAsync(r => r.Id == reserva.Id);
+
+        //        if (ExisteReserva)
+        //        {
+        //            dbcontext.Reservas.Remove(reserva);
+
+        //            await dbcontext.SaveChangesAsync();
+        //            return Ok("Se elimino exitosamente");
+        //        }
+        //        else
+        //        {
+        //            return NotFound("La reserva no existe");
+        //        }   
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return BadRequest("no se pudo eliminar");
+        //    }
+
+        //}
+        #endregion
+        [HttpDelete("{id:int}")]
+        public ActionResult Delete(int id)
         {
+            var rvaElim = dbcontext.Reservas.Where(x => x.Id == id).FirstOrDefault();
+
+            if (rvaElim == null)
+            {
+                return NotFound($"El registro {id} no fue encontrado");
+            }
+
             try
             {
-                var ExisteReserva = await dbcontext.Reservas.AnyAsync(r => r.Id == reserva.Id);
-
-                if (ExisteReserva)
-                {
-                    dbcontext.Reservas.Remove(reserva);
-
-                    await dbcontext.SaveChangesAsync();
-                    return Ok("Se elimino exitosamente");
-                }
-                else
-                {
-                    return NotFound("La reserva no existe");
-                }   
+                dbcontext.Reservas.Remove(rvaElim);
+                dbcontext.SaveChanges();
+                return Ok();
             }
             catch (Exception)
             {
                 return BadRequest("no se pudo eliminar");
             }
-
         }
-        #endregion
-
         #region update
 
         #endregion

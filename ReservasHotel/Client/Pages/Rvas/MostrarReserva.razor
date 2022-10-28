@@ -7,16 +7,37 @@
              reserva = "reserva"
              afiliado = "afiliado"
              cancelar = "cancelar"
-             onValidSubmit ="eliminar"
-             ListaDeHab = "listaDeHab">
+             onValidSubmit ="Eliminar"
+             ListaDeHab = "listaDeHab"
+             txt_btn_Ok="Eliminar">
 
 </FormReserva>
+
+<Confirmacion   @ref="confirmacion" 
+                verCancelar = "true"
+                verOk="true"
+                Titulo="Eliminar habitación"
+                onCancel="Cerrar"
+                onConfirm="BorrarRva">
+
+                <div>
+                    ¿Desea eliminar la reserva: @ReservaElim.Id
+                    <br />
+                    desde el @ReservaElim.F_inicio.ToShortDateString();
+                    <br />
+                    hasta el @ReservaElim.F_fin.ToShortDateString();?
+                </div>
+
+</Confirmacion>
 
 @code {
     [Parameter] public int idRes { get; set; }
     private Reserva reserva = new Reserva();
     private Afiliado afiliado = new Afiliado();
     private List<string> listaDeHab = new List<string>();
+
+    Confirmacion confirmacion;
+    Reserva ReservaElim;
 
     protected override async Task OnInitializedAsync()
     {
@@ -48,12 +69,31 @@
         }
 
     }
-    private void eliminar()
-    {
-
-    }
+    
     private void cancelar()
     {
+        navigationManager.NavigateTo("/Calendario");
+    }
+
+
+    private void Eliminar()
+    {
+        ReservaElim = reserva;
+        confirmacion.Ver();
+    }
+    private void Cerrar()
+    {
+        confirmacion.Ocultar();
+        ReservaElim = null;
+    }
+    private async Task BorrarRva()
+    {
+        var resp = await http.Delete($"api/Reserva/{ReservaElim.Id}");
+        if(resp.Error)
+        {
+            var body = "Error";
+        }
+        Cerrar();
         navigationManager.NavigateTo("/Calendario");
     }
 }
