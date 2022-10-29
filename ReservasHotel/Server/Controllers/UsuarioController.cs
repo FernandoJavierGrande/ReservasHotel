@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ReservasHotel.DB.Data;
 using ReservasHotel.DB.Data.Entidades;
 using System.Security.Claims;
@@ -20,6 +21,13 @@ namespace ReservasHotel.Server.Controllers
         }
         #endregion
 
+        [HttpGet("{NombreUsuario}")]
+        public async Task<ActionResult<bool>> Get(string NombreUsuario)
+        {
+            var usuario = await context.Usuarios.AnyAsync(x => x.NombreUsuario == NombreUsuario);
+
+            return !usuario;
+        }
 
         #region post
         [HttpPost]
@@ -43,7 +51,7 @@ namespace ReservasHotel.Server.Controllers
         #endregion
 
 
-        [HttpPost("/login/{usuario},{clave}")]
+        [HttpPost("{usuario},{clave}")]
         public async Task<ActionResult> Get(string usuario, string clave)
         {
             try

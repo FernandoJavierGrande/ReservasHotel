@@ -69,7 +69,7 @@
         </div>
     </div>
     <div class="col-md-3 col-md-offset-9 text-right">
-        <button class ="@btn_subm_type" type="submit">@txt_btn_Ok</button>
+        <button class ="@btn_subm_class" type="submit">@txt_btn_Ok</button>
         <button class ="btn alert-secondary" @onclick="cancelar"> Cancelar</button>
     </div>
 
@@ -84,7 +84,7 @@
     [Parameter] public EventCallback onValidSubmit { get; set; }
     [Parameter] public EventCallback cancelar { get; set; }
     [Parameter] public List<string> ListaDeHab { get; set; } = new List<string>();
-    [Parameter]public string btn_subm_type { get; set; } = "btn btn-primary";
+    [Parameter]public string btn_subm_class { get; set; } = "btn btn-primary";
     [Parameter]public string txt_btn_Ok { get; set; } = "Aceptar";
 
     private List<Habitacion> habitaciones = new List<Habitacion>();

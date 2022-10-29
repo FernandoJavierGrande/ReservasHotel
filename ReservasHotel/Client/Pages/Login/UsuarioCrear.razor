@@ -1,0 +1,71 @@
+﻿@page "/NuevoUsuario"
+@inject IHttpService http
+@inject NavigationManager navigationManager
+
+<h3>Crear un nuevo usuario</h3>
+
+<FormUsuario
+            usuario="usuario"
+            onValidSubmit="Buscar"
+            onCancel="Cancelar">
+
+</FormUsuario>
+
+<Confirmacion
+                @ref ="mensaje"
+                verOk="true"
+                verCancelar="false"
+                textOk="Aceptar"
+                onCancel="Cancelar"
+                onConfirm="Cerrar"
+                Titulo="Nombre no disponible">
+
+                <div>
+                    El nombre @usuario.NombreUsuario se encuentra disponible.
+                </div>
+</Confirmacion>
+
+@code {
+    private Usuario usuario = new Usuario();
+    Confirmacion mensaje;
+
+
+
+    public async Task Guardar()
+    {
+        var resp = await http.Post("api/Usuario", usuario);
+        if (resp.Error)
+        {
+            var body = resp.HttpResponseMessage;
+        }
+        Cancelar();
+    }
+
+
+    public async Task Buscar()
+    {
+        var resp = await http.Get<bool>($"api/Usuario/{usuario.NombreUsuario}");
+        if (!resp.Error)
+        {
+            if (!resp.Respuesta)
+            {
+                mensaje.Ver();
+            }
+            else
+            {
+                Console.WriteLine("esta en el else de buscar");
+                await Guardar();
+            }
+
+        }
+    }
+    public void Cerrar()
+    {
+        mensaje.Ocultar();
+    }
+    public void Cancelar()
+    {
+        navigationManager.NavigateTo("/Login");
+    }
+
+}

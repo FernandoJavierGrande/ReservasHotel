@@ -85,7 +85,7 @@ namespace ReservasHotel.Server.Controllers
 
         #region post
 
-        //[HttpPost("/agregarReservaciones")]
+        [HttpPost("/agregarReservaciones")]
         public async Task<ActionResult<List<Reservacion>>> GuardarDia(List<Reservacion> AgregarReservaciones)
         {
 

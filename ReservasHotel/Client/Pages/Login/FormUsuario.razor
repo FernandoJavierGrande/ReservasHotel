@@ -1,0 +1,50 @@
+﻿<EditForm Model="usuario" OnValidSubmit="onValidSubmit">
+
+    <DataAnnotationsValidator/>
+    <div class="form-group">
+            <label>Nombre</label>
+            <div>
+                <InputText class="form-control" @bind-Value="usuario.NombreUsuario"/>
+                <ValidationMessage For="@(() => usuario.NombreUsuario)"/>
+
+            </div>
+    </div>
+
+    <div class="form-group">
+            <label>Contraseña</label>
+            <div>
+                <InputText type="password" class="form-control" @bind-Value="@usuario.pass"/>
+                <ValidationMessage For="@(() => usuario.pass)"/>
+
+            </div>
+    </div>
+
+        <div class="form-group">
+            <label>Legajo</label>
+            <div>
+                <InputNumber class="form-control" @bind-Value="@usuario.Legajo"/>
+                <ValidationMessage For="@(() => usuario.Legajo)"/>
+
+            </div>
+        </div>
+
+        
+
+
+    <button class="btn_subm_class" type="submit">@txt_btn_ok</button>
+    <button class="btn btn-secondary" @onclick="onCancel">Cancelar</button>
+</EditForm>
+
+@code {
+    [Parameter] public Usuario usuario { get; set; } = new Usuario();
+    [Parameter] public EventCallback onValidSubmit { get; set; }
+    [Parameter] public EventCallback onCancel { get; set; }
+    [Parameter] public string txt_btn_ok { get; set; } = "Aceptar";
+    [Parameter] public string btn_subm_class { get; set; } = "btn btn-primary";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        usuario.Privilegio = "admin";
+    }
+}

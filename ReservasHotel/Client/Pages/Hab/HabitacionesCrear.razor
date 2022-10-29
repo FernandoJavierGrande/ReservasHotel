@@ -19,7 +19,6 @@
         if (httpRespuesta.Error)
         {
             var body = httpRespuesta.HttpResponseMessage;
-            Console.WriteLine($"error : {body.Content} {httpRespuesta.Respuesta.ToString()}");
         }
         cancelar();
     }

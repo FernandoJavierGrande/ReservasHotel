@@ -61,11 +61,11 @@
 </div>
 
 <Confirmacion   @ref="mensaje" 
-                verCancelar = "true"
-                verOk="false"
+                verCancelar = "false"
+                verOk="true"
                 Titulo="No se encontró"
-                onCancel="Cerrar"
-                onConfirm="conf">
+                onCancel="conf"
+                onConfirm="Cerrar">
                 <div>
                     La reserva no existe.
                 </div>
