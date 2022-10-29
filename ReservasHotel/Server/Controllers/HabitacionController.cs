@@ -27,8 +27,8 @@ namespace ReservasHotel.Server.Controllers
         }
 
 
-        [HttpGet("{NumHabitacion:int}")]
-        public async Task<ActionResult<string>> Get(string NumHabitacion)
+        [HttpGet("{NumHabitacion}")]
+        public async Task<ActionResult<Habitacion>> Get(string NumHabitacion)
         {
             var habitacion = await dbcontext.Habitaciones.Where(
                 e => e.NHab == NumHabitacion).FirstOrDefaultAsync();
@@ -38,7 +38,7 @@ namespace ReservasHotel.Server.Controllers
             }
             else
             {
-                return $"Habitacion {habitacion.Tipo}. Obs: {habitacion.Obs}";
+                return habitacion;
             }
         }
 
@@ -91,12 +91,40 @@ namespace ReservasHotel.Server.Controllers
                 dbcontext.SaveChanges();
                 return Ok();
             }
-            catch (Exception )
+            catch (Exception)
             {
                 return BadRequest("no se pudo eliminar");
             }
         }
+        [HttpPut("{Nhab}")]
+        public ActionResult Put(string Nhab, [FromBody] Habitacion habitacion)
+        {
+            if (Nhab != habitacion.NHab)
+            {
+                return BadRequest("Datos incorrectos");
+            }
 
+            var resp = dbcontext.Habitaciones.Where(e => e.NHab == Nhab).FirstOrDefault();
+
+            if (resp == null)
+            {
+                return NotFound($"La hab {Nhab} no existe.");
+            }
+
+            resp.NHab = habitacion.NHab;
+            resp.Tipo = habitacion.Tipo;
+            resp.Obs = habitacion.Obs;
+
+            try
+            {
+                dbcontext.Habitaciones.Update(resp);
+                dbcontext.SaveChanges();
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest($"No se actualizo {e}");
+            }
+        }
     }
-
 }

@@ -29,7 +29,7 @@ namespace ReservasHotel.Server.Controllers
             return await dbContext.Afiliados.ToListAsync();
         }
 
-        [HttpGet("{Cuil}")]
+        [HttpGet("{Cuil}")] 
         public async Task<ActionResult<Afiliado>> Get(string Cuil)
         {
             var afiliado = await dbContext.Afiliados.Where(a => a.Cuil == Cuil).Include(x => x.Rva).FirstOrDefaultAsync();
@@ -45,10 +45,10 @@ namespace ReservasHotel.Server.Controllers
             }
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id:int}")] //consultar un afiliado por id y no por cuil (desde buscar en calendario)
         public async Task<ActionResult<Afiliado>> GetRva(int id)
         {
-            var afiliado = await dbContext.Afiliados.Where(r => r.Id == id).FirstOrDefaultAsync(); 
+            var afiliado = await dbContext.Afiliados.Where(r => r.Id == id).FirstOrDefaultAsync();
 
             if (afiliado != null)
             {
@@ -112,6 +112,37 @@ namespace ReservasHotel.Server.Controllers
             catch (Exception)
             {
                 return BadRequest("no se pudo eliminar");
+            }
+        }
+        [HttpPut("{cuil}")]
+        public ActionResult Put(string cuil, [FromBody] Afiliado afiliado)
+        {
+            if (cuil != afiliado.Cuil)
+            {
+                return BadRequest("Datos incorrectos");
+            }
+
+            var resp = dbContext.Afiliados.Where(e => e.Cuil == cuil).FirstOrDefault();
+
+            if (resp == null)
+            {
+                return NotFound($"Afiliado {cuil} no existe");
+            }
+
+            resp.Cuil = afiliado.Cuil;
+            resp.Nombre = afiliado.Nombre;
+            resp.Apellido = afiliado.Apellido;
+            resp.FechaCreacion = DateTime.Now;
+
+            try
+            {
+                dbContext.Afiliados.Update(resp);
+                dbContext.SaveChanges();
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest($"No se actualizo");
             }
         }
     }

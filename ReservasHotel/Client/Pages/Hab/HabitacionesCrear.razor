@@ -21,10 +21,10 @@
             var body = httpRespuesta.HttpResponseMessage;
             Console.WriteLine($"error : {body.Content} {httpRespuesta.Respuesta.ToString()}");
         }
-        navigationManager.NavigateTo("/Habitaciones");
+        cancelar();
     }
     private void cancelar()
     {
-        
+        navigationManager.NavigateTo("/Habitaciones");
     }
 }

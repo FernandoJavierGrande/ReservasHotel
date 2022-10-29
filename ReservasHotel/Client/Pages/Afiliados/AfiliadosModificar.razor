@@ -1,7 +1,52 @@
-﻿@page "/Afiliados/Editar/{Cuil:int}"
+﻿@page "/Afiliados/Editar/{Cuil}"
+@inject IHttpService http
+@inject NavigationManager navigationManager
+<h3>Afiliados Modificar</h3>
 
-<h3>AfiliadosModificar</h3>
+<FormAfiliado
+            afiliado="AfiliadoMod"
+            onCancel="cancelar"
+            onValidSubmit="Guardar"
+            txt_btn_ok="Modificar">
+
+</FormAfiliado>
 
 @code {
-    [Parameter] public int Cuil { get; set; }
+    [Parameter] public string Cuil { get; set; }
+    private Afiliado AfiliadoMod = new Afiliado();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LeerAfiliado();
+    }
+
+    private async Task LeerAfiliado()
+    {
+        var resp = await http.Get<Afiliado>($"api/Afiliados/{Cuil}");
+        if (resp.Error)
+        {
+            var body = resp.HttpResponseMessage;
+            navigationManager.NavigateTo("/Afiliados");
+        }
+        else
+        {
+            AfiliadoMod = resp.Respuesta;
+        }
+    }
+
+    private async Task Guardar()
+    {
+        var resp = await http.Put<Afiliado>($"api/Afiliados/{Cuil}", AfiliadoMod);
+        if (resp.Error)
+        {
+            var body = resp.HttpResponseMessage;
+        }
+        cancelar();
+    }
+    private void cancelar()
+    {
+        navigationManager.NavigateTo("/Afiliados");
+    }
+
+
 }

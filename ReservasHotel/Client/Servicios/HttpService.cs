@@ -54,6 +54,24 @@ namespace ReservasHotel.Client.Servicios
                                       respuesta);
         }
 
+        public async Task<HttpRespuesta<object>> Put<T>(string url, T enviar)
+        {
+            try
+            {
+                var enviarJson = JsonSerializer.Serialize(enviar);
+                var enviarContent = new StringContent(enviarJson,
+                                                      Encoding.UTF8,
+                                                      "application/json");
+                var respuesta = await http.PutAsync(url, enviarContent);
+                return new HttpRespuesta<object>(null,
+                                                 !respuesta.IsSuccessStatusCode,
+                                                 respuesta);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
         private async Task<T> DeserializarRespuesta<T>(HttpResponseMessage response)
         {
             var respuestaStr = await response.Content.ReadAsStringAsync();

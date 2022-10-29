@@ -64,8 +64,6 @@ namespace ReservasHotel.Server.Controllers
                 }
                 listaDeListas.Add(reservaciones);
             }
-            Console.WriteLine($"listade listas  {listaDeListas.Count}"); // eliminar si funciona
-            Console.WriteLine($"cantidad de dias {listaDeListas[0].Count}");
             return listaDeListas;
         }
 
@@ -87,7 +85,7 @@ namespace ReservasHotel.Server.Controllers
 
         #region post
 
-        [HttpPost("/agregarReservaciones")]
+        //[HttpPost("/agregarReservaciones")]
         public async Task<ActionResult<List<Reservacion>>> GuardarDia(List<Reservacion> AgregarReservaciones)
         {
 
@@ -206,31 +204,31 @@ namespace ReservasHotel.Server.Controllers
         }
 
 
-        [HttpPut("ModificarHuespedes")] // cambiar para modificar solo uno?
-        public async Task<ActionResult> Put(Reservacion reservacion)
-        {
-            var res = await dbcontext.Reservaciones
-                .Where(r => r.HabitacionId == reservacion.HabitacionId && r.ReservaId == reservacion.ReservaId)
-                .ToListAsync();
+        //[HttpPut("ModificarHuespedes")] // cambiar para modificar solo uno?
+        //public async Task<ActionResult> Put(Reservacion reservacion)
+        //{
+        //    var res = await dbcontext.Reservaciones
+        //        .Where(r => r.HabitacionId == reservacion.HabitacionId && r.ReservaId == reservacion.ReservaId)
+        //        .ToListAsync();
 
-            try
-            {
-                foreach (var item in res)
-                {
-                    item.Cant_Huespedes = reservacion.Cant_Huespedes;
+        //    try
+        //    {
+        //        foreach (var item in res)
+        //        {
+        //            item.Cant_Huespedes = reservacion.Cant_Huespedes;
 
-                    dbcontext.Reservaciones.Update(item);
-                }
+        //            dbcontext.Reservaciones.Update(item);
+        //        }
 
-                await dbcontext.SaveChangesAsync();
-                return Ok();
-            }
-            catch (Exception)
-            {
+        //        await dbcontext.SaveChangesAsync();
+        //        return Ok();
+        //    }
+        //    catch (Exception)
+        //    {
 
-                return BadRequest("No se actualizo correctamente");
-            }
-        }
+        //        return BadRequest("No se actualizo correctamente");
+        //    }
+        //}
 
         #endregion
 

@@ -22,7 +22,7 @@
          </div>
     </div>
     <br />
-    <button class ="btn btn-primary" type="submit">Aceptar</button>
+    <button class ="btn btn-primary" type="submit">@txt_btn_ok</button>
 
     <button class ="btn btn-secondary" @onclick = "onCancel">Cancel</button>
 </EditForm>
@@ -31,6 +31,6 @@
     [Parameter]public Afiliado afiliado { get; set; }
     [Parameter]public EventCallback onValidSubmit { get; set; }
     [Parameter]public EventCallback onCancel { get; set; }   
-    
-    
+    [Parameter]public string txt_btn_ok { get; set; } = "Agregar";
+
 }

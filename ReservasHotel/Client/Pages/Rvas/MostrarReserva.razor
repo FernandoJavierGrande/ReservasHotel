@@ -9,7 +9,8 @@
              cancelar = "cancelar"
              onValidSubmit ="Eliminar"
              ListaDeHab = "listaDeHab"
-             txt_btn_Ok="Eliminar">
+             txt_btn_Ok="Eliminar"
+             btn_subm_type="btn btn-danger">
 
 </FormReserva>
 
@@ -23,9 +24,9 @@
                 <div>
                     ¿Desea eliminar la reserva: @ReservaElim.Id
                     <br />
-                    desde el @ReservaElim.F_inicio.ToShortDateString();
+                    desde el @ReservaElim.F_inicio.ToShortDateString()
                     <br />
-                    hasta el @ReservaElim.F_fin.ToShortDateString();?
+                    hasta el @ReservaElim.F_fin.ToShortDateString()?
                 </div>
 
 </Confirmacion>

@@ -1,7 +1,59 @@
 ﻿@page "/Habitaciones/Editar/{NHab}"
+@inject NavigationManager navigationManager
+@inject IHttpService http
 
-<h3>HabitacionesModificar</h3>
+<h3>Modificar habitacion</h3>
+<h4>Cargue los nuevos datos de la habitacion</h4>
+
+<FormHab
+            habitacion="HabitacionMod"
+            onCancel="cancelar"
+            onValidSubmit="Guardar"
+            txt_btn_ok="Modificar">
+
+</FormHab>
+
 
 @code {
     [Parameter]public string NHab { get; set; }
+    private Habitacion HabitacionMod = new Habitacion();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LeerHab();
+    }
+
+    private async Task LeerHab()
+    {
+        var resp = await http.Get<Habitacion>($"api/Habitacion/{NHab}");
+        if (resp.Error)
+        {
+
+            var body = resp.HttpResponseMessage;
+            navigationManager.NavigateTo("/Habitaciones");
+        }
+        else
+        {
+            HabitacionMod = resp.Respuesta;
+        }
+    }
+
+    private async Task Guardar()
+    {
+        var resp = await http.Put<Habitacion>($"api/Habitacion/{NHab}", HabitacionMod);
+        if (resp.Error)
+        {
+
+            var body = resp.HttpResponseMessage;
+        }
+        cancelar();
+
+
+    }
+    private void cancelar()
+    {
+        navigationManager.NavigateTo("/Habitaciones");
+    }
+
+
 }

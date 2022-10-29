@@ -23,7 +23,7 @@
     <div class="form-control-lg">
         <label> Fecha de ingreso</label>
         <div>
-            <InputDate class = "form-control" @bind-Value=@reserva.F_inicio></InputDate>
+            <InputDate class = "form-control" @bind-Value=@reserva.F_inicio @onfocusout="bindFecha"></InputDate>
             <ValidationMessage For=@(()=> reserva.F_inicio)/>
         <label> Fecha de Salida</label>
         <div>
@@ -69,7 +69,7 @@
         </div>
     </div>
     <div class="col-md-3 col-md-offset-9 text-right">
-        <button class ="btn btn-primary" type="submit">@txt_btn_Ok</button>
+        <button class ="@btn_subm_type" type="submit">@txt_btn_Ok</button>
         <button class ="btn alert-secondary" @onclick="cancelar"> Cancelar</button>
     </div>
 
@@ -83,12 +83,12 @@
     [Parameter] public Reserva reserva { get; set; }
     [Parameter] public EventCallback onValidSubmit { get; set; }
     [Parameter] public EventCallback cancelar { get; set; }
-    [Parameter] public List<string> ListaDeHab { get; set; }
-
+    [Parameter] public List<string> ListaDeHab { get; set; } = new List<string>();
+    [Parameter]public string btn_subm_type { get; set; } = "btn btn-primary";
     [Parameter]public string txt_btn_Ok { get; set; } = "Aceptar";
 
     private List<Habitacion> habitaciones = new List<Habitacion>();
-    
+
     private string habActual="0";
 
 
@@ -151,6 +151,11 @@
     private void Limpiar()
     {
         ListaDeHab = new List<string>();
+        StateHasChanged();
+    }
+    private void bindFecha()
+    {
+        reserva.F_fin = reserva.F_inicio;
         StateHasChanged();
     }
 

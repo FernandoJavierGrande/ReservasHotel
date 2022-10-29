@@ -23,7 +23,7 @@
     </div>
 
     <br/>
-    <button class="btn btn-primary" type="submit">AGREGAR</button>
+    <button class="btn btn-primary" type="submit">@txt_btn_ok</button>
     <button class ="btn btn-secondary" @onclick = "onCancel">Cancelar</button>
 </EditForm>
 
@@ -31,4 +31,5 @@
     [Parameter]public Habitacion habitacion { get; set; }
     [Parameter]public EventCallback onValidSubmit { get; set; }
     [Parameter]public EventCallback onCancel { get; set; }
+    [Parameter] public string txt_btn_ok { get; set; } = "Agregar";
 }
