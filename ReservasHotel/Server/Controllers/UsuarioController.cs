@@ -24,9 +24,9 @@ namespace ReservasHotel.Server.Controllers
         [HttpGet("{NombreUsuario}")]
         public async Task<ActionResult<bool>> Get(string NombreUsuario)
         {
-            var usuario = await context.Usuarios.AnyAsync(x => x.NombreUsuario == NombreUsuario);
+            var resp = await context.Usuarios.AnyAsync(x => x.NombreUsuario == NombreUsuario);
 
-            return !usuario;
+            return !resp;
         }
 
         #region post
@@ -51,17 +51,18 @@ namespace ReservasHotel.Server.Controllers
         #endregion
 
 
-        [HttpPost("{usuario},{clave}")]
-        public async Task<ActionResult> Get(string usuario, string clave)
+        [HttpGet("{usuario},{clave}")]
+        public async Task<ActionResult<Usuario>> Get(string usuario, string clave)
         {
             try
             {
+                
                 var User = context.Usuarios
                     .Where(x => x.NombreUsuario == usuario && x.pass == clave)
                     .FirstOrDefault();
 
                 if (User == null)
-                    throw new Exception("");
+                    return BadRequest("Usuario o contraseña incorrecta");
 
 
                 var claims = new List<Claim> //guarda los datos de la sesion 
@@ -71,24 +72,20 @@ namespace ReservasHotel.Server.Controllers
                     new Claim("Leg", User.Legajo.ToString()),
                 };
 
-
-
-                foreach (var item in claims)    //prueba
-                    Console.WriteLine($"+++++++{item.Type} = {item.Value}");
-
+                //foreach (var item in claims)    //prueba
+                //    Console.WriteLine($"+++++++{item.Type} = {item.Value}");
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
 
                 await HttpContext.SignInAsync
                     (CookieAuthenticationDefaults.AuthenticationScheme,
                     new ClaimsPrincipal(claimsIdentity));
 
-                return Ok($"id user {User}");
+                return User;
             }
-            catch (Exception e)
+            catch (Exception )
             {
-                return BadRequest("El usuario o contraseña no son correctos " + e);
+                return BadRequest("El usuario o contraseña no son correctos ");
             }
         }
     }

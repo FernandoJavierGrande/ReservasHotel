@@ -46,5 +46,6 @@
     {
         await base.OnInitializedAsync();
         usuario.Privilegio = "admin";
+        usuario.FechaCreacion = DateTime.Today.Date;
     }
 }

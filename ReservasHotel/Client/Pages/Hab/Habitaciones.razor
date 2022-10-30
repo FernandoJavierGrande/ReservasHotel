@@ -1,5 +1,6 @@
 ﻿@page "/Habitaciones"
 @inject IHttpService http
+@inject NavigationManager navigationManager
 
 <h3>Lista de habitaciones</h3>
 
@@ -71,11 +72,20 @@
 
     private async Task readHabitaciones()
     {
-        var respuesta = await http.Get<List<Habitacion>>("api/Habitacion");
-        if (!respuesta.Error)
+        try
         {
-            habitaciones = respuesta.Respuesta; 
+            var respuesta = await http.Get<List<Habitacion>>("api/Habitacion");
+            if (!respuesta.Error)
+            {
+                habitaciones = respuesta.Respuesta; 
+            }
+            
         }
+        catch (Exception)
+        {
+            navigationManager.NavigateTo("/");
+        }
+        
     }
 
     private void Eliminar(Habitacion habitacion)

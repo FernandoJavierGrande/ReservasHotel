@@ -10,7 +10,7 @@
         </div>
         <div>
             <label>Nombre del afiliado</label>
-            <InputText class = "form-control" @bind-Value=afiliado.Nombre disabled="disabled" ></InputText>
+            <InputText class = "form-control" @bind-Value=@afiliado.Nombre disabled="disabled" ></InputText>
         </div>
         
     </div>
@@ -89,7 +89,7 @@
 
     private List<Habitacion> habitaciones = new List<Habitacion>();
 
-    private string habActual="0";
+    private string nombreCompleto="";
 
 
     private async void ExistCuil()
@@ -102,7 +102,7 @@
             if (!httpRespuesta.Error) // si existe el afiliado carga el id De la resp
             {
                 reserva.AfiliadoId = httpRespuesta.Respuesta.Id;
-                afiliado.Nombre =$"{httpRespuesta.Respuesta.Nombre} { httpRespuesta.Respuesta.Apellido}";
+                afiliado.Nombre = $"{httpRespuesta.Respuesta.Nombre} {httpRespuesta.Respuesta.Apellido}";
                 StateHasChanged();
             }else
             {

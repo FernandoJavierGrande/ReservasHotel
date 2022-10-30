@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ReservasHotel.DB.Data;
@@ -8,6 +9,7 @@ namespace ReservasHotel.Server.Controllers
 {
     [ApiController]
     [Route("api/Fechas")]
+    [Authorize]
     public class ReservacionesController : ControllerBase
     {
         private readonly Context dbcontext;

@@ -1,9 +1,56 @@
-﻿@page "/Login"
-<h3>LoginUsuario</h3>
+﻿@page "/"
+@inject IHttpService http
+@inject NavigationManager nav
+<h3>Ingresar </h3>
 
 
+<FormLogin usuario="usuario" onValidSubmit="Ingresar">
 
-<a class="btn btn-primary" href="/NuevoUsuario"> CREAR </a>
+</FormLogin>
+<br />
+<div class="form-control">
+    <label > Presione para registrarse</label>
+    <div>
+        <a class="btn btn-secondary" href="/NuevoUsuario"> Crear </a>
+    </div>
+</div>
+
+<Confirmacion
+                @ref ="mensaje"
+                verOk="true"
+                verCancelar="false"
+                textOk="Aceptar"
+                onCancel="Cancelar"
+                onConfirm="Cancelar"
+                Titulo="Incorrecto">
+
+                <div>
+                    EL nombre de usuario o clave es incorrectos
+                </div>
+</Confirmacion>
+
+
 @code {
+    private Usuario usuario = new Usuario();
+    Confirmacion mensaje;
+
+    public async Task Ingresar()
+    {
+        var resp = await http.Get<Usuario>($"api/Usuario/{usuario.NombreUsuario},{usuario.pass}");
+        if (resp.Error)
+        {
+            mensaje.Ver();
+            Console.WriteLine("false en resp error");
+        }
+        else
+        {
+            nav.NavigateTo("/calendario");   
+        }
+    }
+    private void Cancelar()
+    {
+        mensaje.Ocultar();
+    }
+
 
 }

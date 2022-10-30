@@ -6,7 +6,7 @@ using ReservasHotel.DB.Data.Entidades;
 
 namespace ReservasHotel.Server.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [Route("api/Afiliados")]
     public class AfiliadoController : ControllerBase

@@ -1,5 +1,6 @@
 ﻿@page "/Afiliados"
 @inject IHttpService http
+@inject NavigationManager navigationManager
 
 <h3>Lista de Afiliados</h3>
 
@@ -71,12 +72,21 @@
     }
     private async Task readAfiliados()
     {
-        var respuesta = await http.Get<List<Afiliado>>("api/Afiliados");
-        if (!respuesta.Error)
+
+        try
         {
-            afiliados = respuesta.Respuesta;
+            var respuesta = await http.Get<List<Afiliado>>("api/Afiliados");
+            if (!respuesta.Error)
+            {
+                afiliados = respuesta.Respuesta;
             
+            }   
         }
+        catch (Exception)
+        {
+            navigationManager.NavigateTo("/");
+        }
+        
     }
     private void Eliminar(Afiliado afiliado)
     {

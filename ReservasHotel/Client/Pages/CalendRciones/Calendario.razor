@@ -9,13 +9,33 @@
      <a class = "btn btn-primary" href="NuevaReserva"> Agregar reserva </a>
 </div>
 
+
 <div class="form-control">
-    <button class=" oi oi-arrow-circle-left" @onclick="DismFecha"></button>
-    <button class=" oi oi-arrow-circle-right" @onclick="AumentarFecha"></button>
-    <input type="number" class="form-control-sm" @bind=@cant_dias @onclick="disponibilidad"/>
+    <input  class="form-control-md" type="date" @onchange="IrA"/>
+    <label> Cantidad de dias a mostrar</label>
+    <select  id="cmb_dias" class = "form-control-md" @onchange="DiasSel">
+        <option value="7">7</option>
+        <option value="14">14</option>
+        <option value="30">30</option>
+    </select>
 </div>   
 
-<br />
+
+<div class="row">
+    <div class="col-lg-15 col-md-offset-2">
+        <div class="card">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <button class=" oi oi-arrow-circle-left" @onclick="DismFecha"></button>
+                <button class=" oi oi-arrow-circle-right" @onclick="AumentarFecha" ></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@*<input type="number" class="form-control-sm" @bind=@cant_dias @onclick="disponibilidad"/>*@
+
+
 <table class="table table-bordered">
     <thead style="background-color:#D8E7F8">
         <tr>
@@ -81,6 +101,8 @@
 
     private int reservaConsultar=0;
     private DateTime fecha_Seleccion;
+    private string fecha;
+
     int cant_dias = 7;
 
 
@@ -89,20 +111,41 @@
         await base.OnInitializedAsync();
 
         fecha_Seleccion = DateTime.Today.Date;
+
+
+
+        await disponibilidad();
+    }
+    private async Task DiasSel(ChangeEventArgs e)
+    {
+        cant_dias = int.Parse(e.Value.ToString());
+        await disponibilidad();
+    }
+    private async Task IrA(ChangeEventArgs e)
+    {
+        string aux = e.Value.ToString();
+        fecha_Seleccion = DateTime.Parse(aux);
         await disponibilidad();
     }
 
     private async Task disponibilidad()
     {
-        string fecha = $"{fecha_Seleccion.Year.ToString()}-{fecha_Seleccion.Month.ToString()}-{fecha_Seleccion.Day.ToString()}";
-
-        var respuesta = await http.Get<List<List<Reservacion>>>($"api/Fechas/{fecha}?dias={cant_dias}");
-        if (!respuesta.Error)
+        fecha = $"{fecha_Seleccion.Year.ToString()}-{fecha_Seleccion.Month.ToString()}-{fecha_Seleccion.Day.ToString()}";
+        try
         {
-            reservaciones = respuesta.Respuesta;
-            StateHasChanged();
+            var respuesta = await http.Get<List<List<Reservacion>>>($"api/Fechas/{fecha}?dias={cant_dias}");
+            if (!respuesta.Error)
+            {
+                reservaciones = respuesta.Respuesta;
+                StateHasChanged();
 
+            }
         }
+        catch (Exception)
+        {
+            navigationManager.NavigateTo("/");
+        }
+
     }
     private async Task AumentarFecha()//paginacion
     {
@@ -135,10 +178,10 @@
         {
             navigationManager.NavigateTo($"/Reservas/Editar/{reservaConsultar}");
         }
-        
+
     }  
 
     private void conf (){} 
 
-
+    
 }

@@ -1,0 +1,22 @@
+﻿
+<EditForm Model="usuario" OnValidSubmit="onValidSubmit">
+    <div class="form-control">
+        <label>Usuario</label>
+        <div>
+            <InputText type="text" class="form-control" placeholder="Usuario" @bind-Value=@usuario.NombreUsuario/>
+        </div>
+        
+        <label>Contraseña</label>
+        <div>
+            <InputText type="password" class="form-control" placeholder="Contraseña" @bind-Value=@usuario.pass/>
+        </div>
+        <div>
+            <button class="btn btn-primary" type="submit"> Ingresar</button>
+        </div>
+</div>
+</EditForm>
+
+@code {
+    [Parameter] public Usuario usuario { get; set; } = new Usuario();
+    [Parameter] public EventCallback onValidSubmit { get; set; }
+}

@@ -6,7 +6,7 @@ using ReservasHotel.DB.Data.Entidades;
 
 namespace ReservasHotel.Server.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [Route("api/Reserva")]
     public class ReservaController : ControllerBase
@@ -74,7 +74,7 @@ namespace ReservasHotel.Server.Controllers
 
                         reservacion.Fecha = reserva.F_inicio.AddDays(i);
 
-                        reservacion.Cant_Huespedes = 1; //eliminar
+                        //reservacion.Cant_Huespedes = 1; //eliminar
 
                         listaDeRciones.Add(reservacion);
 

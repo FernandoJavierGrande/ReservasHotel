@@ -49,25 +49,36 @@
 
     private async Task BuscarReserva()
     {
-        var resp = await http.Get<Reserva>($"api/Reserva/{idRes}");
-        if (!resp.Error)
+        
+        try
         {
-            reserva = resp.Respuesta;
-            foreach (var item in resp.Respuesta.Reservaciones)
+            var resp = await http.Get<Reserva>($"api/Reserva/{idRes}");
+            if (!resp.Error)
             {
-                if (!listaDeHab.Contains(item.HabitacionId))
+                reserva = resp.Respuesta;
+                foreach (var item in resp.Respuesta.Reservaciones)
                 {
-                    listaDeHab.Add(item.HabitacionId);
+                    if (!listaDeHab.Contains(item.HabitacionId))
+                    {
+                        listaDeHab.Add(item.HabitacionId);
+                    }
+                }
+                StateHasChanged();
+                var respuesta = await http.Get<Afiliado>($"api/Afiliados/{reserva.AfiliadoId}");
+                if (!respuesta.Error)
+                {
+                
+                    afiliado = respuesta.Respuesta;
+                    afiliado.Nombre += $" {afiliado.Apellido}";
+                    StateHasChanged();
                 }
             }
-            StateHasChanged();
-            var respuesta = await http.Get<Afiliado>($"api/Afiliados/{reserva.AfiliadoId}");
-            if (!respuesta.Error)
-            {
-                afiliado = respuesta.Respuesta;
-                StateHasChanged();
-            }
         }
+        catch (Exception)
+        {
+            navigationManager.NavigateTo("/");
+        }
+        
 
     }
     

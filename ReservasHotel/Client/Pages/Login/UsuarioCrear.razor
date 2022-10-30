@@ -49,12 +49,12 @@
         {
             if (!resp.Respuesta)
             {
+
                 mensaje.Ver();
             }
             else
-            {
-                Console.WriteLine("esta en el else de buscar");
-                await Guardar();
+            {  
+            await Guardar();
             }
 
         }
@@ -65,7 +65,7 @@
     }
     public void Cancelar()
     {
-        navigationManager.NavigateTo("/Login");
+        navigationManager.NavigateTo("/");
     }
 
 }
